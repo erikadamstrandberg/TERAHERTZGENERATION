@@ -3,25 +3,56 @@ import matplotlib as matlib
 import matplotlib.pyplot as matplot
 import scipy.constants as const
 from pylab import *
+from mpl_toolkits.mplot3d import Axes3D
+import Laser
+import scipy.fftpack
 
 #%% Single laser pulse
 
-SIZE = 600
+c = const.value("speed of light in vacuum")
+SIZE = 500
 z = np.arange(SIZE)
 E = np.zeros(SIZE)
 B = np.zeros(SIZE)
-PULSELENGTH = 400
-MAXTIME = 600
+MAXTIME = 500
 
+PULSELENGTH = 400
+El = np.zeros(PULSELENGTH)
+OMEGA = 1e13
+AMPLITUDE = 2
+#El = Laser.Laser_gauss_sin(PULSELENGTH,OMEGA,AMPLITUDE)
+
+for i in range(PULSELENGTH):
+    El[i] = np.sin(i*OMEGA)
+
+#matplot.plot(z[0:len(El)],El)
 for i in range(MAXTIME):
-    for k in range(len(E)):
+    # BOUNDARY CONDITIONS z=0 in E and z=SIZE in B
+    # E[0] = ?
+    # B[SIZE-1] = B[SIZE-2]
+    for k in range(1,len(E)):
         E[k] = E[k] + (B[k]-B[k-1])
+        
     for j in range(len(B)-1):
         B[j] = B[j] + (E[j+1]-E[j])
-    if i < PULSELENGTH:
-        E[0] = np.cos(2*np.pi*i*8/200)*np.exp(-(i-PULSELENGTH/2)**2/1e4)
-matplot.plot(z,E)
-#matplot.plot(z,B)
+        
+    if i < len(El):
+        E[0] = El[i]
+    else:
+        E[0] = 0
+
+#matplot.plot(z,E,'b')
+#matplot.axis([0,SIZE,-1,1])
+#matplot.plot(z,B,'g')
+Esnok = np.fft.fft(E,SIZE)
+Esnoksnygg = np.fft.fftshift(Esnok)
+matplot.plot(z,Esnok) 
+#%%
+#matplot.axis([450,550,-40,80])
+Toppar = np.argmax(Esnok)
+Efrek = np.fft.fftfreq(SIZE)
+Wavefrek = Efrek[Toppar]
+print(Wavefrek)
 
 
 #%% Double laser pulse
@@ -47,58 +78,28 @@ for i in range(MAXTIME):
 matplot.plot(z,E)
 #matplot.plot(z,B)
 
-#%% Including a J-source term
+#%% Polarized laser!
 
-HALF = 1/2
-SIZE = 800
+SIZE = 500
 z = np.arange(SIZE)
-E = np.zeros(SIZE)
-B = np.zeros(SIZE)
-J = np.zeros(SIZE)
-Ne = np.ones(SIZE)
-Ne_temp = 0
-Ne[0] = 1
-PULSELENGTH = 800
-MAXTIME = 400
+Ex = np.zeros(SIZE)
+Ey = np.zeros(SIZE)
+Bx = np.zeros(SIZE)
+By = np.zeros(SIZE)
+PULSELENGTH = 400
+MAXTIME = 500
 
 for i in range(MAXTIME):
-    for k in range(len(E)):
-        E[k] = E[k] + (B[k]-B[k-1]) - J[k]
-    for j in range(len(B)-1):
-        B[j] = B[j] + (E[j+1]-E[j])
-        Ne_Temp = Ne[j]
-        if E[j] > 0.9:
-            Ne[j] = j
-        else:
-            Ne[j] = 0
-        J[k] = J[k] + HALF*(Ne_Temp+Ne[j])*E[j]
+    for k in range(len(Ex)):
+        Ex[k] = Ex[k] - (By[k]-By[k-1])
+        Ey[k] = Ey[k] + (Bx[k]-Bx[k-1])
+    for j in range(len(Bx)-1):
+        By[j] = By[j] - (Ex[j+1]-Ex[j])
+        Bx[j] = Bx[j] + (Ey[j+1]-Ey[j])
     if i < PULSELENGTH:
-        E[0] = np.cos(2*np.pi*i*8/200)*np.exp(-(i-PULSELENGTH/2)**2/1e4)
-matplot.plot(z,E)
-
-
-#%%
-
-HALF = 1/2
-SIZE = 2000
-z = np.arange(SIZE)
-E = np.zeros(SIZE)
-B = np.zeros(SIZE)
-J = np.zeros(SIZE)
-Ne = np.zeros(SIZE)
-Ne[SIZE/2:SIZE-600] = 0.2
-PULSELENGTH = 800
-MAXTIME = 900
-
-for i in range(MAXTIME):
-    for k in range(len(E)):
-        E[k] = E[k] + (B[k]-B[k-1]) - J[k]
-    for j in range(len(B)-1):
-        B[j] = B[j] + (E[j+1]-E[j])
-        Ne_Temp = Ne[j]
-        J[k] = J[k] + HALF*(Ne_Temp+Ne[j])*E[j]
-    if i < PULSELENGTH:
-        E[0] = np.cos(2*np.pi*i*8/200)*np.exp(-(i-PULSELENGTH/2)**2/1e4)
-matplot.plot(z,E)
-matplot.plot(z,Ne)
-#matplot.plot(z,B)
+        xi1 = i/PULSELENGTH
+        xi2 = 1-xi1
+        Ex[0] = (np.cos(2*np.pi*i*8/200)*np.exp(-(i-PULSELENGTH/2)**2/1e4))*xi1
+        Ey[0] = (np.cos(2*np.pi*i*8/200)*np.exp(-(i-PULSELENGTH/2)**2/1e4))*xi2
+        
+Axes3D.plot(Ex,Ey)
