@@ -38,6 +38,8 @@ for i in range(MAXTIME):
         
     if i < len(El):
         E[0] = El[i]
+        
+        
     else:
         E[0] = 0
 
@@ -102,4 +104,24 @@ for i in range(MAXTIME):
         Ex[0] = (np.cos(2*np.pi*i*8/200)*np.exp(-(i-PULSELENGTH/2)**2/1e4))*xi1
         Ey[0] = (np.cos(2*np.pi*i*8/200)*np.exp(-(i-PULSELENGTH/2)**2/1e4))*xi2
         
-Axes3D.plot(Ex,Ey)
+#%% Saves time and space
+
+maxtime = 600
+maxlength = 600
+dim = [maxtime, maxlength]
+E = np.zeros(dim)
+B = np.zeros(dim)
+dt = 1
+dz = 1
+pulselength = 200
+z = np.arange(dim[0])
+ 
+for i in range(1,len(E)-1): 
+    if i < pulselength:
+        E[i,0] = np.cos(2*np.pi*i*8/200)*np.exp(-(i-pulselength/2)**2 /1e4)
+    else :
+        E[i,0] = 0
+    for j in range(1,len(E)):
+            E[i, j] = E[i-1, j] - dt/dz * (B[i-1,j] - B[i-1, j-1])
+    for j in range(len(B)-1):
+            B[i, j] = B[i-1,j] - dt/dz * (E[i, j+1] - E[i, j])
