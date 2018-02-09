@@ -7,7 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import Laser
 import scipy.fftpack
 import Ionization as Ion
-import J as Jeq
+import j as Jeq
 
 #%% Saves time and space
 
