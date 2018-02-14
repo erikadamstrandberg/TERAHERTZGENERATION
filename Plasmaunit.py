@@ -1,3 +1,6 @@
+""" Converts your value from plasmaunits and back! """
+""" Needs the OMEGA from your simulation           """
+
 #%%
 import scipy.constants as const
 
