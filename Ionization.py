@@ -6,12 +6,14 @@
 
 import numpy as np
 import scipy.constants as const
+import Plasmaunit
 
 m_e = const.value("electron mass")
 e_e = const.value("elementary charge")
 epsilon = const.value("electric constant")
 hbar = const.value("Planck constant over 2 pi")
-eV_to_J = const.value("electron volt-joule relationship")
+J_to_eV = const.value("joule-electron volt relationship")
+
 U_Ar = np.zeros(19)
 U_Ar[0] = 0
 U_Ar[1] =  15.7596117 # Taken from NIST
@@ -39,6 +41,7 @@ OMEGA_A = (m_e*e_e**4)/(fyra_epsilon_pi**2*hbar**3)
 E_a = (m_e**2*e_e**5)/(fyra_epsilon_pi**3*hbar**4)
 r_H = U_Ar/U_H
 
-def Landau(E,LASER_OMEGA,Z):
-    W = (4*OMEGA_A*r_H[Z]**(5/2)*(E_a/np.abs(E))*np.exp(-2*r_H[Z]**(3/2)*(E_a/(3*np.abs(E)))))*LASER_OMEGA
+def Landau(E,OMEGA,Z):
+    Ereal = Plasmaunit.E(E,OMEGA)*J_to_eV
+    W = (4*OMEGA_A*r_H[Z]**(5/2)*(E_a/np.abs(Ereal))*np.exp(-2*r_H[Z]**(3/2)*(E_a/(3*np.abs(Ereal)))))
     return W
