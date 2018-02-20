@@ -1,4 +1,4 @@
-""" Create a array with a gaussian pulse. Needed arguements are pulselength and frequency. """
+""" Create an array with a gaussian pulse. Needed arguements are pulselength and frequency. """
 """ Optional are in order amplitude, the mean and the variance of the gaussian envelope    """
 
 import numpy as np
