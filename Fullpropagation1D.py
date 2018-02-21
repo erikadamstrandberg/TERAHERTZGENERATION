@@ -14,8 +14,8 @@ from datetime import datetime
 def main():    
 
     # Define the length and size of the simulation window. Units are in dt and dz respectively.
-    TIME = 600
-    SIZE = 300
+    TIME = 400
+    SIZE = 20000
     dim = [TIME,SIZE]
     
     # Initialise the various fields to be calculated
@@ -28,7 +28,6 @@ def main():
     W1 = np.zeros(SIZE)
     W2 = np.zeros(SIZE)
 
-    Nat = np.ones(SIZE)
     Ni1 = np.zeros(SIZE)
     Ni1tot = np.zeros(dim)
     Ni1temp = np.zeros(SIZE)
@@ -38,35 +37,45 @@ def main():
 
     ne = np.zeros(SIZE)
     netemp = np.zeros(SIZE)
-    netot = np.zeros(dim)
 
     Etot = np.zeros(dim)
     Btot = np.zeros(dim)
     Jtot = np.zeros(dim)
     ntot = np.zeros(dim)
     W1tot = np.zeros(dim)
-    k = np.arange(SIZE)
+    netot = np.zeros(dim)
+    plott = np.arange(TIME)
+    plotz = np.arange(SIZE)
     
-    n[30:60] = 100 # Adjust electron density
-    dt = 0.01        # Time step
-    dz = 0.01        # Spatial step. dt = dz is the magic step using plasma units
+    dt = 0.1        # Time step
+    dz = 0.1        # Spatial step. dt = dz is the magic step using plasma units
     nu = 0           # Collision rate
 
     # Parameters for laser pulse.
-    PULSELENGTH = 100
+    c = const.speed_of_light
+    epsilon = const.epsilon_0 
+    LAMBDA = 800e-9 
+    f = c/LAMBDA
+    PULSELENGTH = 10000
     PULSESTART = 0
-    f = 5e15
     OMEGAREAL = 2*np.pi*f
-    OMEGAPRIM = 25                  # this is the plasma omega, use this everywhere in the code
-    OMEGA_0 = OMEGAREAL/OMEGAPRIM   # this is the arbitrary omega, use this as argument in punits
-    VAR = 0.1
-    E0 = 0.063
+    OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
+    OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
+    t0REAL = 50e-15 
+    I0 = 4e18 
+    E0REAL = np.sqrt(2*I0/(epsilon*c))
+    E0 = punit.Eplasma(E0REAL,OMEGA_0)
+    t0 = punit.tplasma(t0REAL,OMEGA_0)
+    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt)
     
-    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,VAR,dt)
+    # Parameters for the atomdensity
+    NatREAL = 3e25 
+    Nat = punit.nplasma(NatREAL,OMEGA_0)
+    Nat = np.ones(SIZE)*Nat
 
+    # Defines the lenght which we allow the gas to be ionized
     PLASMASTART = 50
     PLASMASTOPP = 100
-
     
     print(str(datetime.now())+': Beginning simulation.')
     for i in range(1,TIME):
