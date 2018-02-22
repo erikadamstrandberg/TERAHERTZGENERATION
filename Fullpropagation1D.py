@@ -114,7 +114,7 @@ def main():
     z = np.arange(len(Etot[0]))
     plotnsave(z, Etot[100], '', 'etot.png')
     matplot.clf()
-
+    
     t = np.arange(TIME)
 
 #%%
@@ -124,6 +124,7 @@ def plotnsave(x, y, args, filename):
     if filename:
         mplot.savefig(filename)
         print(str(datetime.now())+ ': Plot saved.')
+        np.savetxt(filename, y, delimiter=',')
     else:
         print(str(datetime.now())+': Plot complete.')
     
