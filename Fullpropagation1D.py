@@ -113,6 +113,9 @@ def main():
     print(str(datetime.now())+': Simulation complete.')
     z = np.arange(len(Etot[0]))
     plotnsave(z, Etot[100], '', 'etot.png')
+    matplot.clf()
+
+    t = np.arange(TIME)
 
 #%%
 def plotnsave(x, y, args, filename):
@@ -130,7 +133,7 @@ def energy_total_1d(F):
         print('Field seems to be a scalar. Please make sure it\'s a vector.')
         print('Error in energy_total_1d')
         return 0
-    else if np.ndim(F) > 1:
+    elif np.ndim(F) > 1:
         print('Field seems to be a matrix. Please make sure it\'s a vector.')
         print('Error in energy_total_1d')
         return 0
