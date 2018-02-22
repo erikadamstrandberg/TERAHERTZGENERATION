@@ -113,7 +113,7 @@ def main():
     print(str(datetime.now())+': Simulation complete.')
     z = np.arange(len(Etot[0]))
     plotnsave(z, Etot[100], '', 'etot.png')
-    matplot.clf()
+    mplot.clf()
     
     t = np.arange(TIME)
 
