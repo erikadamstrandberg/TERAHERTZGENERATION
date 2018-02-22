@@ -1,13 +1,13 @@
 import numpy as np
 import scipy.constants as const
 import matplotlib as matlib
-matlib.use('Agg')
+matlib.use('Agg')                    # This allows the standalone application to plot and save figs.
 import matplotlib.pyplot as mplot
 from pylab import *
 import Laser
 import Ionization as Ion
 import SpaceSolver
-import Plasmaunit
+import Plasmaunit as punit
 from datetime import datetime
 
 #%% Full propagation! With W1 and W2
@@ -15,7 +15,7 @@ def main():
 
     # Define the length and size of the simulation window. Units are in dt and dz respectively.
     TIME = 400
-    SIZE = 20000
+    SIZE = 2000
     dim = [TIME,SIZE]
     
     # Initialise the various fields to be calculated
@@ -56,10 +56,10 @@ def main():
     epsilon = const.epsilon_0 
     LAMBDA = 800e-9 
     f = c/LAMBDA
-    PULSELENGTH = 10000
+    PULSELENGTH = 1000
     PULSESTART = 0
     OMEGAREAL = 2*np.pi*f
-    OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
+    OMEGAPRIM = 2                       # this is the plasma omega, use this everywhere in the code
     OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
     t0REAL = 50e-15 
     I0 = 4e18 
@@ -112,7 +112,6 @@ def main():
         Ni1tot[i] = Ni1
     print(str(datetime.now())+': Simulation complete.')
     z = np.arange(len(Etot[0]))
-    # print('Etot is now of dimensions' + str(Etot.shape[0]) + 'x' +str(Etot.shape[1])) # 
     plotnsave(z, Etot[100], '', 'etot.png')
 
 #%%
@@ -124,6 +123,19 @@ def plotnsave(x, y, args, filename):
         print(str(datetime.now())+ ': Plot saved.')
     else:
         print(str(datetime.now())+': Plot complete.')
+    
+
+def energy_total_1d(F):
+    if np.ndim(F) == 0:
+        print('Field seems to be a scalar. Please make sure it\'s a vector.')
+        print('Error in energy_total_1d')
+        return 0
+    else if np.ndim(F) > 1:
+        print('Field seems to be a matrix. Please make sure it\'s a vector.')
+        print('Error in energy_total_1d')
+        return 0
+    else:
+        return np.sum(F**2)/2
     
 # plotz = np.arange(SIZE)
 # plott = np.arange(TIME)
