@@ -20,6 +20,7 @@ def main():
     plotz = np.arange(SIZE)
     dim = [TIME,SIZE]
     
+    # Initialise the various fields to be calculated
     E = np.zeros(SIZE)
     B = np.zeros(SIZE)
     J = np.zeros(SIZE)
@@ -44,16 +45,13 @@ def main():
     ntot = np.zeros(dim)
     W1tot = np.zeros(dim)
 
-    dt = 0.1
-    dz = 0.1
-    nu = 0
+    dt = 0.1 #Time step
+    dz = 0.1 #Spatial step. Note: dz = dt is the magic time step in plasma units
 
     c = const.speed_of_light
     epsilon = const.epsilon_0 
-    LAMBDA = 800e-9 
+    LAMBDA = 800e-9                     # Wavelength for for the laser pulse
     f = c/LAMBDA
-    PULSELENGTH = 1000
-    PULSESTART = 1000
     OMEGAREAL = 2*np.pi*f
     OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
     OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
@@ -61,28 +59,26 @@ def main():
     I0 = 4e18 
     NatREAL = 7e26
     E0REAL = np.sqrt(2*I0/(epsilon*c))
+    PULSELENGTH = 1000                  # Space given to the pulse in the simulation window
+    PULSESTART = 1000                   # Places the pulse at a certain z
+    
+    nu = 0                              # Collision freq.
+    
+    PLASMASTART = PULSELENGTH+PULSESTART    # Were the atom density starts
+    PLASMASTOPP = SIZE                      # Were it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window 
+    RAMPLENGTH = 600                        # Length of ramp
+    RAMP_DAMP = 0.1                         # 1-exp(-RAMP_DAMP*z) for the exponential ramp
 
     E0 = punit.Eplasma(E0REAL,OMEGA_0)
     t0 = punit.tplasma(t0REAL,OMEGA_0)
-    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt)
-
-    #EREALenv = punit.Ereal(E,OMEGA_0)
-    #IREAL = epsilon*c*EREALenv**2/2    # This is the real pulse!
-
-    #mplot.plot(plotz,E)
-
-    PLASMASTART = PULSELENGTH+PULSESTART
-    PLASMASTOPP = SIZE
-    RAMPLENGTH = 600
-    RAMP_DAMP = 0.1
-
-
+    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt) # Sets up the laser pulse in the window
+    
     Natpunit = punit.nplasma(NatREAL,OMEGA_0)
     Nat = np.ones(SIZE)*Natpunit
+    Rampfunctions.Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt) # Sets up the atom density
 
-    Rampfunctions.Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt)
-
-    mplot.plot(plotz,Nat)
+    #mplot.plot(plotz,Nat)
+    #mplot.plot(plotz,E)
     #Nkritisk = punit.nreal(1,OMEGA_0)
     #mplot.savefig("start")
 
