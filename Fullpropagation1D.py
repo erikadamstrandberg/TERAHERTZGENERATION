@@ -77,7 +77,7 @@ def main():
     Nat = np.ones(SIZE)*Natpunit
     Rampfunctions.Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt) # Sets up the atom density
 
-    #mplot.plot(plotz,Nat)
+    #mplot.plot(plotz,Nat)             # Things for checking the setup
     #mplot.plot(plotz,E)
     #Nkritisk = punit.nreal(1,OMEGA_0)
     #mplot.savefig("start")
@@ -108,9 +108,8 @@ def main():
     plotnsave(z, Etot[1400], '', 'etot.png')
     mplot.clf()
     
-    t = np.arange(TIME)
 
-#%%
+
 def plotnsave(x, y, args, filename):
     print(str(datetime.now())+': Beginning plot.')
     mplot.plot(x, y, args)
