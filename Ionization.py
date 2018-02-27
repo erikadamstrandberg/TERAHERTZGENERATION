@@ -41,9 +41,22 @@ OMEGA_A = (m_e*e_e**4)/(fyra_epsilon_pi**2*hbar**3)
 E_a = (m_e**2*e_e**5)/(fyra_epsilon_pi**3*hbar**4)
 r_H = U_Ar/U_H
 
-def Landau(E,OMEGA_0,Z,dt):
-    Ereal = Plasmaunit.Ereal(E,OMEGA_0)
-    W = (4*OMEGA_A*r_H[Z]**(5/2)*(E_a/np.abs(Ereal))*np.exp(-2*r_H[Z]**(3/2)*(E_a/(3*np.abs(Ereal)))))/OMEGA_0
+def Landau_element(E,OMEGA_0,Z,dt):
+    if np.abs(E) == 0:
+        W = 0
+    else:
+        Ereal = Plasmaunit.Ereal(E,OMEGA_0)
+        W = (4*OMEGA_A*r_H[Z]**(5/2)*(E_a/np.abs(Ereal))*np.exp(-2*r_H[Z]**(3/2)*(E_a/(3*np.abs(Ereal)))))/OMEGA_0
     if dt*W > 1:
         W = 1
     return W
+                
+def Landau_array(E,W,OMEGA_0,Z,dt):
+    for z in range(len(E)):
+        if np.abs(E[z]) == 0:
+            W[z] = 0
+        else:
+            Ereal = Plasmaunit.Ereal(E[z],OMEGA_0)
+            W[z] = (4*OMEGA_A*r_H[Z]**(5/2)*(E_a/np.abs(Ereal))*np.exp(-2*r_H[Z]**(3/2)*(E_a/(3*np.abs(Ereal)))))/OMEGA_0
+        if dt*W[z] > 1:
+            W[z] = 1
