@@ -12,30 +12,31 @@ from datetime import datetime
 
 #%% Full propagation! With W1 and W2
 def main():    
-
+    # Define the length and size of the simulation window. Units are in dt and dz respectively.
     TIME = 1000
     SIZE = 4000
+    
     plott = np.arange(TIME)
     plotz = np.arange(SIZE)
     dim = [TIME,SIZE]
     
+    # Initialise the various fields to be calculated
     E = np.zeros(SIZE)
-    Etemp = np.zeros(SIZE)
     B = np.zeros(SIZE)
     J = np.zeros(SIZE)
-    n = np.zeros(SIZE)
     W1 = np.zeros(SIZE)
     W2 = np.zeros(SIZE)
     W3 = np.zeros(SIZE)
-    ntemp = np.zeros(SIZE)
     Ni2 = np.zeros(SIZE)
-    Ni2temp = np.zeros(SIZE)
     Ni1 = np.zeros(SIZE)
-    Ni1temp = np.zeros(SIZE)
     Ni0 = np.ones(SIZE)
-    Ni0temp = np.zeros(SIZE)
     ne = np.zeros(SIZE)
+    
+    Ni2temp = np.zeros(SIZE)
+    Ni1temp = np.zeros(SIZE)
+    Ni0temp = np.zeros(SIZE)
     netemp = np.zeros(SIZE)
+    
     Ni0tot = np.zeros(dim)
     Ni1tot = np.zeros(dim)
     netot = np.zeros(dim)
@@ -45,9 +46,8 @@ def main():
     ntot = np.zeros(dim)
     W1tot = np.zeros(dim)
 
-    dt = 0.1
-    dz = 0.1
-    nu = 0
+    dt = 0.1        # Time step
+    dz = 0.1        # Spatial step. dt = dz is the magic step using plasma units
 
     c = const.speed_of_light
     epsilon = const.epsilon_0 
@@ -62,29 +62,24 @@ def main():
     I0 = 4e18 
     NatREAL = 7e26
     E0REAL = np.sqrt(2*I0/(epsilon*c))
-
-    E0 = punit.Eplasma(E0REAL,OMEGA_0)
-    t0 = punit.tplasma(t0REAL,OMEGA_0)
-    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt)
-
-    #EREALenv = punit.Ereal(E,OMEGA_0)
-    #IREAL = epsilon*c*EREALenv**2/2    # This is the real pulse!
-
-    mplot.plot(plotz,E)
-
+    nu = 0
     PLASMASTART = PULSELENGTH+PULSESTART
     PLASMASTOPP = SIZE
     RAMPLENGTH = 600
     RAMP_DAMP = 0.1
 
-
+    E0 = punit.Eplasma(E0REAL,OMEGA_0)  #
+    t0 = punit.tplasma(t0REAL,OMEGA_0)
+    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt)
     Natpunit = punit.nplasma(NatREAL,OMEGA_0)
     Nat = np.ones(SIZE)*Natpunit
-
     Rampfunctions.Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt)
 
-    mplot.plot(plotz,Nat)
-    Nkritisk = punit.nreal(1,OMEGA_0)
+    #EREALenv = punit.Ereal(E,OMEGA_0)
+    #IREAL = epsilon*c*EREALenv**2/2    # This is the real pulse!
+    #mplot.plot(plotz,E)                
+    #mplot.plot(plotz,Nat)              #Check the setup!
+    #Nkritisk = punit.nreal(1,OMEGA_0)  #Check the atom density
     
     print(str(datetime.now())+': Beginning simulation.')
     for i in range(1,TIME):
@@ -132,37 +127,6 @@ def energy_total_1d(F):
     else:
         return np.sum(F**2)/2
     
-# plotz = np.arange(SIZE)
-# plott = np.arange(TIME)
-
-# t = 500
-# z = 100
-# mplot.plot(plotz,Etot[t]*1,'b')
-# #mplot.plot(k,W1tot[t]*1e-2)
-# mplot.plot(plotz,netot[t]*1,'r')
-# mplot.plot(plotz,Jtot[t]*300,'y')
-#mplot.plot(plott,Etot[:,300])
-#mplot.plot(plott,W1tot[:,20])
-#mplot.plot(plott,Ni1tot[:,z])
-
-#%%
-
-# Eefter = Etot[0:1500,2*PULSELENGTH+10]
-# #plotz = np.arange(len(Eefter))
-# #mplot.plot(plotz,Eefter)
-# Efft = np.fft.fft(Eefter)
-# mplot.plot(plotz,np.abs(Efft))
-# Efore = Etot[0:1500,PULSELENGTH-1]
-# plotz = np.arange(len(Efore))
-# Efft = np.fft.fft(Efore)
-# mplot.plot(plotz,np.abs(Efft))
-
-# #%% Real units
-
-# nreal = Plasmaunit.nreal(n[200],OMEGAUNIT)
-# print(nreal)
-# omegareal = Plasmaunit.omegareal(OMEGA,OMEGAUNIT)
-# print(omegareal)
 
 if __name__ == '__main__':
     main()
