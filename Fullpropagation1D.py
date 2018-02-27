@@ -111,7 +111,7 @@ def plotnsave(x, y, args, filename):
     if filename:
         mplot.savefig(filename)
         print(str(datetime.now())+ ': Plot saved.')
-        np.savetxt(filename, y, delimiter=',')
+        #np.savetxt(filename, y, delimiter=',')
     else:
         print(str(datetime.now())+': Plot complete.')
     
