@@ -8,6 +8,7 @@ import Laser
 import Ionization as Ion
 import SpaceSolver
 import Plasmaunit as punit
+import Rampfunctions
 from datetime import datetime
 
 #%% Full propagation! With W1 and W2
@@ -89,7 +90,7 @@ def main():
         ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,OMEGA_0,dt)
         Ni0temp = Ni0
         Ni1temp = Ni1
-        J = SpaceSolver.J(E,J,ne,ntemp,nu,dt,dz)
+        J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
         netemp = ne
 
 
