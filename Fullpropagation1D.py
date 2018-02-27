@@ -8,111 +8,104 @@ import Laser
 import Ionization as Ion
 import SpaceSolver
 import Plasmaunit as punit
+import Rampfunctions
 from datetime import datetime
 
 #%% Full propagation! With W1 and W2
 def main():    
-
     # Define the length and size of the simulation window. Units are in dt and dz respectively.
-    TIME = 400
-    SIZE = 2000
+    TIME = 2000
+    SIZE = 4000
+    plott = np.arange(TIME)
+    plotz = np.arange(SIZE)
     dim = [TIME,SIZE]
     
     # Initialise the various fields to be calculated
     E = np.zeros(SIZE)
-    Etemp = np.zeros(SIZE)
     B = np.zeros(SIZE)
     J = np.zeros(SIZE)
-    n = np.zeros(SIZE)
-    ntemp = np.zeros(SIZE)
     W1 = np.zeros(SIZE)
     W2 = np.zeros(SIZE)
-
+    W3 = np.zeros(SIZE)
+    Ni2 = np.zeros(SIZE)
+    Ni2temp = np.zeros(SIZE)
     Ni1 = np.zeros(SIZE)
-    Ni1tot = np.zeros(dim)
     Ni1temp = np.zeros(SIZE)
     Ni0 = np.ones(SIZE)
-    Ni0tot = np.zeros(dim)
     Ni0temp = np.zeros(SIZE)
-
     ne = np.zeros(SIZE)
     netemp = np.zeros(SIZE)
-
+    
+    Ni0tot = np.zeros(dim)
+    Ni1tot = np.zeros(dim)
+    netot = np.zeros(dim)
     Etot = np.zeros(dim)
     Btot = np.zeros(dim)
     Jtot = np.zeros(dim)
     ntot = np.zeros(dim)
     W1tot = np.zeros(dim)
-    netot = np.zeros(dim)
-    plott = np.arange(TIME)
-    plotz = np.arange(SIZE)
-    
-    dt = 0.1        # Time step
-    dz = 0.1        # Spatial step. dt = dz is the magic step using plasma units
-    nu = 0           # Collision rate
 
-    # Parameters for laser pulse.
+    dt = 0.1 #Time step
+    dz = 0.1 #Spatial step. Note: dz = dt is the magic time step in plasma units
+
     c = const.speed_of_light
     epsilon = const.epsilon_0 
-    LAMBDA = 800e-9 
+    LAMBDA = 800e-9                     # Wavelength for for the laser pulse
     f = c/LAMBDA
-    PULSELENGTH = 1000
-    PULSESTART = 0
     OMEGAREAL = 2*np.pi*f
-    OMEGAPRIM = 2                       # this is the plasma omega, use this everywhere in the code
+    OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
     OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
-    t0REAL = 50e-15 
+    t0REAL = 50e-16 
     I0 = 4e18 
+    NatREAL = 7e26
     E0REAL = np.sqrt(2*I0/(epsilon*c))
+    PULSELENGTH = 1000                  # Space given to the pulse in the simulation window
+    PULSESTART = 1000                   # Places the pulse at a certain z
+    
+    nu = 0                              # Collision freq.
+    
+    PLASMASTART = PULSELENGTH+PULSESTART    # Were the atom density starts
+    PLASMASTOPP = SIZE                      # Were it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window 
+    RAMPLENGTH = 600                        # Length of ramp
+    RAMP_DAMP = 0.1                         # 1-exp(-RAMP_DAMP*z) for the exponential ramp
+
     E0 = punit.Eplasma(E0REAL,OMEGA_0)
     t0 = punit.tplasma(t0REAL,OMEGA_0)
-    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt)
+    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt) # Sets up the laser pulse in the window
     
-    # Parameters for the atomdensity
-    NatREAL = 3e25 
-    Nat = punit.nplasma(NatREAL,OMEGA_0)
-    Nat = np.ones(SIZE)*Nat
+    Natpunit = punit.nplasma(NatREAL,OMEGA_0)
+    Nat = np.ones(SIZE)*Natpunit
+    Rampfunctions.Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt) # Sets up the atom density
 
-    # Defines the lenght which we allow the gas to be ionized
-    PLASMASTART = 50
-    PLASMASTOPP = 100
+    #mplot.plot(plotz,Nat)
+    #mplot.plot(plotz,E)
+    #Nkritisk = punit.nreal(1,OMEGA_0)
+    #mplot.savefig("start")
+
+    #EREALenv = punit.Ereal(E,OMEGA_0)
+    #IREAL = epsilon*c*EREALenv**2/2    # This is the real pulse!
+    #mplot.plot(plotz,E)                
+    #mplot.plot(plotz,Nat)              #Check the setup!
+    #Nkritisk = punit.nreal(1,OMEGA_0)  #Check the atom density
     
     print(str(datetime.now())+': Beginning simulation.')
     for i in range(1,TIME):
-
+    
         E = SpaceSolver.E(E,B,J,dt,dz)
-        B = SpaceSolver.B(E,B,dt,dz)
-
-        for z in range(len(E)):
-            if abs(E[z]) == 0:
-                W1[z] = 0
-                W2[z] = 0
-            else:
-                if z > PLASMASTART and z < PLASMASTOPP:
-                    W1[z] = Ion.Landau(E[z],OMEGA_0,1,dt)
-                    W2[z] = Ion.Landau(E[z],OMEGA_0,2,dt)
-                else:
-                    W1[z] = 0
-                    W2[z] = 0
-
-        for z in range(len(E)):
-            Ni0[z] = Nat[z]-Ni1[z]
-            Ni1[z] = (Ni1[z]*(1-(dt/2)*W2[z])+(dt/2)*W1[z]*(Ni0[z]+Ni0temp[z]))/(1+(dt/2)*W2[z])
-            ne[z] = 1*Ni1[z]
-            Ni0temp[z] = Ni0[z]
-
-        J = SpaceSolver.J(E,J,ne,ntemp,nu,dt,dz)
+        B = SpaceSolver.B(E,B,dt,dz)   
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,OMEGA_0,dt)
+        Ni0temp = Ni0
+        Ni1temp = Ni1
+        J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
         netemp = ne
+
 
         Etot[i] = E
         Jtot[i] = J
-        W1tot[i] = W1
         netot[i] = ne
-        Ni0tot[i] = Ni0
-        Ni1tot[i] = Ni1
     print(str(datetime.now())+': Simulation complete.')
     z = np.arange(len(Etot[0]))
-    plotnsave(z, Etot[100], '', 'etot.png')
+    plotnsave(z, Etot[1400], '', 'etot.png')
     mplot.clf()
     
     t = np.arange(TIME)
@@ -124,7 +117,7 @@ def plotnsave(x, y, args, filename):
     if filename:
         mplot.savefig(filename)
         print(str(datetime.now())+ ': Plot saved.')
-        np.savetxt(filename, y, delimiter=',')
+        #np.savetxt(filename, y, delimiter=',')
     else:
         print(str(datetime.now())+': Plot complete.')
     
@@ -141,37 +134,6 @@ def energy_total_1d(F):
     else:
         return np.sum(F**2)/2
     
-# plotz = np.arange(SIZE)
-# plott = np.arange(TIME)
-
-# t = 500
-# z = 100
-# mplot.plot(plotz,Etot[t]*1,'b')
-# #mplot.plot(k,W1tot[t]*1e-2)
-# mplot.plot(plotz,netot[t]*1,'r')
-# mplot.plot(plotz,Jtot[t]*300,'y')
-#mplot.plot(plott,Etot[:,300])
-#mplot.plot(plott,W1tot[:,20])
-#mplot.plot(plott,Ni1tot[:,z])
-
-#%%
-
-# Eefter = Etot[0:1500,2*PULSELENGTH+10]
-# #plotz = np.arange(len(Eefter))
-# #mplot.plot(plotz,Eefter)
-# Efft = np.fft.fft(Eefter)
-# mplot.plot(plotz,np.abs(Efft))
-# Efore = Etot[0:1500,PULSELENGTH-1]
-# plotz = np.arange(len(Efore))
-# Efft = np.fft.fft(Efore)
-# mplot.plot(plotz,np.abs(Efft))
-
-# #%% Real units
-
-# nreal = Plasmaunit.nreal(n[200],OMEGAUNIT)
-# print(nreal)
-# omegareal = Plasmaunit.omegareal(OMEGA,OMEGAUNIT)
-# print(omegareal)
 
 if __name__ == '__main__':
     main()
