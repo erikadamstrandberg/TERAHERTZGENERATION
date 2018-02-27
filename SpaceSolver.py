@@ -27,4 +27,4 @@ def N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,OMEGA_0,dt):
         Ni1[z] = (Ni1[z]*(1-(dt/2)*W2[z])+(dt/2)*W1[z]*(Ni0[z]+Ni0temp[z]))/(1+(dt/2)*W2[z])
         Ni2[z] = (Ni2[z]*(1-(dt/2)*W3[z])+(dt/2)*W2[z]*(Ni1[z]+Ni1temp[z]))/(1+(dt/2)*W3[z])
         ne[z] = 1*Ni1[z] + 2*Ni2[z]
-return ne
+    return ne
