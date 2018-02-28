@@ -6,7 +6,6 @@ from pylab import *
 import Laser
 import SpaceSolver
 import Plasmaunit as punit
-import Pvelo
 import Energi
 import Rampfunctions
 
