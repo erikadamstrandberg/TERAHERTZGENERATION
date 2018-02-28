@@ -73,7 +73,7 @@ for x in range(len(n)):
     #EREALenv = punit.Ereal(E,OMEGA_0)
     #IREAL = epsilon*c*EREALenv**2/2    # This is the real pulse!
     
-    mplot.plot(plotz,E)
+    #mplot.plot(plotz,E)
     
     PLASMASTART = PULSELENGTH+PULSESTART
     PLASMASTOPP = SIZE
@@ -83,7 +83,7 @@ for x in range(len(n)):
     
     Rampfunctions.Ramp_linear(RAMPLENGTH,PLASMASTART,PLASMASTOPP,Natpunit,Nat,SIZE,dt)
     
-    mplot.plot(plotz,Nat)
+    #mplot.plot(plotz,Nat)
     Nkritisk = punit.nreal(1,OMEGA_0)
 
     for i in range(1,TIME):
