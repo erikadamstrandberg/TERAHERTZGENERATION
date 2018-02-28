@@ -10,8 +10,8 @@ import Rampfunctions
 
 #%% Full propagation! With W1 and W2
 
-#n = np.arange(0,1,0.01)
-n = [0,0.1]
+n = np.arange(0,1,0.01)
+#n = [0,0.1]
 matdim = [len(n),3]
 matmitten = np.zeros(matdim)
 matvid75 = np.zeros(matdim)
