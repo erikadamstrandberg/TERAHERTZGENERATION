@@ -95,15 +95,15 @@ for x in range(len(n)):
         J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
         netemp = ne
     
-    matmitten[x,0] = E[SIZE/2]
-    matmitten[x,1] = J[SIZE/2]
-    matmitten[x,2] = ne[SIZE/2]
-    matvid75[x,0] = E[SIZE/2+SIZE/4]
-    matvid75[x,1] = J[SIZE/2+SIZE/4]
-    matvid75[x,2] = ne[SIZE/2+SIZE/4]
-    matvid875[x,0] = E[SIZE/2+SIZE/4+SIZE/8]
-    matvid875[x,1] = J[SIZE/2+SIZE/4+SIZE/8]
-    matvid875[x,2] = ne[SIZE/2+SIZE/4+SIZE/8]
+    matmitten[x,0] = E[int(SIZE/2)]
+    matmitten[x,1] = J[int(SIZE/2)]
+    matmitten[x,2] = ne[int(SIZE/2)]
+    matvid75[x,0] = E[int(SIZE/2+SIZE/4)]
+    matvid75[x,1] = J[int(SIZE/2+SIZE/4)]
+    matvid75[x,2] = ne[int(SIZE/2+SIZE/4)]
+    matvid875[x,0] = E[int(SIZE/2+SIZE/4+SIZE/8)]
+    matvid875[x,1] = J[int(SIZE/2+SIZE/4+SIZE/8)]
+    matvid875[x,2] = ne[int(SIZE/2+SIZE/4+SIZE/8)]
     
 np.savetxt('matmitten.txt', matmitten, delimiter='.')
 np.savetxt('matvid75.txt', matvid75, delimiter='.')
