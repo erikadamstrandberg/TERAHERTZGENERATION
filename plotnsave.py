@@ -1,19 +1,26 @@
 # coding: utf-8
 
-from matlibplot.plot import plot as mplot
+import matplotlib as matlib
+matlib.use('Agg')                    # This allows the standalone application to plot and save figs.
+import matplotlib.pyplot as mplot
+import numpy as np
 
-def plotnsave(x, y, plotargs, filename):
-    """ Takes x and y as mandatory arguments and args and filename as optional. Plots y as a function of x. Passes args to matlibplot.plot.plot. Saves as a .png file if filename is specified.
+from datetime import datetime
+
+def plotnsave(x, y, plotargs = '', filename = '', savetext = False, savepic = True):
+    """ Takes x and y as mandatory arguments and args and filename as optional. Plots y as a function of x. Passes plotargs to matlibplot.pyplot.plot. Saves as a .png file if filename is specified.
     """
     print(str(datetime.now())+': Beginning plot.')
-    if args:
+    if plotargs:
         mplot.plot(x, y, plotargs)
     else:
         mplot.plot(x, y)
     if filename:
-        mplot.savefig(filename)
-        np.savetxt(filename + '_y.csv', y, delimiter=',')
-        np.savetext(filename + '_x.csv', x, delimiter=',')
+        if savepic:
+            mplot.savefig(filename + '.png')
+        if savetext:
+            np.savetxt(filename + '_y.csv', y, delimiter=',')
+            np.savetxt(filename + '_x.csv', x, delimiter=',')
         print(str(datetime.now())+ ': Plot saved.')
     else:
         print(str(datetime.now())+': Plot complete.')

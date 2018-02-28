@@ -10,15 +10,19 @@ import SpaceSolver
 import Plasmaunit as punit
 import Rampfunctions
 import plotnsave
+from progress.bar import ChargingBar
 
 from datetime import datetime
 
+from sys import argv
 
 #%% Full propagation! With W1 and W2
-def main():    
+def main():
+    #print(sys.argv[1][0])
+    
     # Define the length and size of the simulation window. Units are in dt and dz respectively.
-    TIME = 2000
-    SIZE = 4000
+    TIME = 200
+    SIZE = 400
     plott = np.arange(TIME)
     plotz = np.arange(SIZE)
     dim = [TIME,SIZE]
@@ -48,8 +52,8 @@ def main():
     ntot = np.zeros(dim)
     W1tot = np.zeros(dim)
 
-    dt = 0.1 #Time step
-    dz = 0.1 #Spatial step. Note: dz = dt is the magic time step in plasma units
+    dt = double(1) #Time step
+    dz = double(1) #Spatial step. Note: dz = dt is the magic time step in plasma units
 
     c = const.speed_of_light
     epsilon = const.epsilon_0 
@@ -62,14 +66,14 @@ def main():
     I0 = 4e18 
     NatREAL = 7e26
     E0REAL = np.sqrt(2*I0/(epsilon*c))
-    PULSELENGTH = 1000                  # Space given to the pulse in the simulation window
-    PULSESTART = 1000                   # Places the pulse at a certain z
+    PULSELENGTH = 100                  # Space given to the pulse in the simulation window
+    PULSESTART = 100                   # Places the pulse at a certain z
     
     nu = 0                              # Collision freq.
     
     PLASMASTART = PULSELENGTH+PULSESTART    # Were the atom density starts
     PLASMASTOPP = SIZE                      # Were it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window 
-    RAMPLENGTH = 600                        # Length of ramp
+    RAMPLENGTH = 60                        # Length of ramp
     RAMP_DAMP = 0.1                         # 1-exp(-RAMP_DAMP*z) for the exponential ramp
 
     E0 = punit.Eplasma(E0REAL,OMEGA_0)
@@ -90,10 +94,11 @@ def main():
     #mplot.plot(plotz,E)                
     #mplot.plot(plotz,Nat)              #Check the setup!
     #Nkritisk = punit.nreal(1,OMEGA_0)  #Check the atom density
+    bar = ChargingBar('Simulation running', max = TIME)
     
     print(str(datetime.now())+': Beginning simulation.')
     for i in range(1,TIME):
-    
+            
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
         ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,OMEGA_0,dt)
@@ -102,17 +107,17 @@ def main():
         J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
         netemp = ne
 
-
         Etot[i] = E
         Jtot[i] = J
         netot[i] = ne
+        bar.next()
+        
     print(str(datetime.now())+': Simulation complete.')
+    bar.finish()
     z = np.arange(len(Etot[0]))
-    plotnsave(z, Etot[1400], '', 'etot.png')
+    plotnsave.plotnsave(z, Etot[140], filename = 'etot_t140')
     mplot.clf()
     
-    
-
 def energy_total_1d(F):
     if np.ndim(F) == 0:
         print('Field seems to be a scalar. Please make sure it\'s a vector.')
