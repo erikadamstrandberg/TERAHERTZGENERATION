@@ -112,6 +112,15 @@ def main():
     mplot.clf()
     
     
+def plotnsave(x, y, args, filename):
+     print(str(datetime.now())+': Beginning plot.')
+     mplot.plot(x, y, args)
+     if filename:
+         mplot.savefig(filename)
+         print(str(datetime.now())+ ': Plot saved.')
+         np.savetxt(filename, y, delimiter=',')
+     else:
+print(str(datetime.now())+': Plot complete.')
 
 def energy_total_1d(F):
     if np.ndim(F) == 0:
