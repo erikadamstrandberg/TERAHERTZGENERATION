@@ -6,7 +6,6 @@ from pylab import *
 import Laser
 import SpaceSolver
 import Plasmaunit as punit
-import Energi
 import Rampfunctions
 
 #%% Full propagation! With W1 and W2
