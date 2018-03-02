@@ -1,14 +1,14 @@
 #%%
 import numpy as np
 
-def Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt):
-    x = np.array(RAMPLENGTH)
-    i = np.arange(0,RAMPLENGTH*dt,dt)
+def Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt):
+    x = np.array(SIZE)
+    i = np.arange(0,SIZE*dt,dt)
     x = 1-np.exp(-i*RAMP_DAMP)
     
     for z in range(SIZE):
         if z > PLASMASTART and z < PLASMASTOPP:
-            if z < PLASMASTART + RAMPLENGTH:
+            if z < PLASMASTART + SIZE:
                 Nat[z] = x[z-PLASMASTART]*Natpunit
             else:
                 Nat[z] = 1*Natpunit
