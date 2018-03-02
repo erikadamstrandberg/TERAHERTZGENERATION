@@ -82,7 +82,7 @@ def main():
     
     Natpunit = punit.nplasma(NatREAL,OMEGA_0)
     Nat = np.ones(SIZE)*Natpunit
-    Rampfunctions.Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt) # Sets up the atom density
+    Rampfunctions.Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt) # Sets up the atom density
 
     #mplot.plot(plotz,Nat)             # Things for checking the setup
     #mplot.plot(plotz,E)
