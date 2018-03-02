@@ -118,11 +118,6 @@ def main():
     plotnsave.plotnsave(z, Etot[140], filename = 'etot_t140')
     mplot.clf()
     
-<<<<<<< HEAD
-=======
-   
-
->>>>>>> b9dea1f7606a87839a1526a29870f5059df8d4af
 def energy_total_1d(F):
     if np.ndim(F) == 0:
         print('Field seems to be a scalar. Please make sure it\'s a vector.')
