@@ -12,15 +12,12 @@ def Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dz):
     
     for z in range(SIZE):
         if z > PLASMASTART and z < PLASMASTOPP:
-            if z < PLASMASTART + SIZE:
-                Nat[z] = x[z-PLASMASTART]*Natpunit
-            else:
-                Nat[z] = 1*Natpunit
+            Nat[z] = x[z-PLASMASTART]*Natpunit
         else:
             Nat[z] = 0
             
 def Ramp_linear(RAMPLENGTH,PLASMASTART,PLASMASTOPP,Natpunit,Nat,SIZE,dz):
-    x = np.arange(0,RAMPLENGTH*dZ,dz)
+    x = np.arange(0,RAMPLENGTH*dz,dz)
     xnorm = x/(RAMPLENGTH*dz)
     
     for z in range(SIZE):
