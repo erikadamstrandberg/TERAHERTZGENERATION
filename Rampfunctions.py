@@ -1,3 +1,7 @@
+""" Creates a ramp for the atom density to make the current less diskont.    """
+""" The exponential ramp scales with the SIZE of the simulation window       """
+""" With the linear ramp you have to scale the RAMPLENGTH with the SIZE      """
+
 #%%
 import numpy as np
 
