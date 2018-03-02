@@ -5,9 +5,9 @@
 #%%
 import numpy as np
 
-def Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt):
+def Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dz):
     x = np.array(SIZE)
-    i = np.arange(0,SIZE*dt,dt)
+    i = np.arange(0,SIZE*dz,dz)
     x = 1-np.exp(-i*RAMP_DAMP)
     
     for z in range(SIZE):
@@ -19,9 +19,9 @@ def Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt):
         else:
             Nat[z] = 0
             
-def Ramp_linear(RAMPLENGTH,PLASMASTART,PLASMASTOPP,Natpunit,Nat,SIZE,dt):
-    x = np.arange(0,RAMPLENGTH*dt,dt)
-    xnorm = x/(RAMPLENGTH*dt)
+def Ramp_linear(RAMPLENGTH,PLASMASTART,PLASMASTOPP,Natpunit,Nat,SIZE,dz):
+    x = np.arange(0,RAMPLENGTH*dZ,dz)
+    xnorm = x/(RAMPLENGTH*dz)
     
     for z in range(SIZE):
         if z > PLASMASTART and z < PLASMASTOPP:
