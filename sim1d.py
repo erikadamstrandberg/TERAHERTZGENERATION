@@ -33,13 +33,9 @@ def runsim(
     W2 = np.zeros(size)
     W3 = np.zeros(size)
     Ni2 = np.zeros(size)
-    Ni2temp = np.zeros(size)
     Ni1 = np.zeros(size)
-    Ni1temp = np.zeros(size)
     Ni0 = np.ones(size)
-    Ni0temp = np.zeros(size)
     ne = np.zeros(size)
-    netemp = np.zeros(size)
     
     Ni0tot = np.zeros(dim)
     Ni1tot = np.zeros(dim)
@@ -47,8 +43,6 @@ def runsim(
     Etot = np.zeros(dim)
     Btot = np.zeros(dim)
     Jtot = np.zeros(dim)
-    ntot = np.zeros(dim)
-    W1tot = np.zeros(dim)
 
     LIGHTSPEED = const.speed_of_light
     EPSILON = const.epsilon_0 
@@ -80,14 +74,14 @@ def runsim(
     for i in range(1,time):
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
-        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,omega_0,dt)
-        Ni0temp = Ni0
-        Ni1temp = Ni1
-        J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
-        netemp = ne
-        # Save all fields for the specific time.
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,OMEGA_0,dt)
+        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
+
         Etot[i] = E
+        Btot[i] = B
         Jtot[i] = J
+        Ni0tot[i] = Ni0
+        Ni1tot[i] = Ni1
         netot[i] = ne
         bar.next()
 
