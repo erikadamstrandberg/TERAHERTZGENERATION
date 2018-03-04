@@ -35,13 +35,9 @@ def main():
     W2 = np.zeros(SIZE)
     W3 = np.zeros(SIZE)
     Ni2 = np.zeros(SIZE)
-    Ni2temp = np.zeros(SIZE)
     Ni1 = np.zeros(SIZE)
-    Ni1temp = np.zeros(SIZE)
     Ni0 = np.ones(SIZE)
-    Ni0temp = np.zeros(SIZE)
     ne = np.zeros(SIZE)
-    netemp = np.zeros(SIZE)
     
     Ni0tot = np.zeros(dim)
     Ni1tot = np.zeros(dim)
@@ -50,7 +46,6 @@ def main():
     Btot = np.zeros(dim)
     Jtot = np.zeros(dim)
     ntot = np.zeros(dim)
-    W1tot = np.zeros(dim)
 
     dt = double(1) #Time step
     dz = double(1) #Spatial step. Note: dz = dt is the magic time step in plasma units
@@ -101,14 +96,14 @@ def main():
             
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
-        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,OMEGA_0,dt)
-        Ni0temp = Ni0
-        Ni1temp = Ni1
-        J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
-        netemp = ne
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,OMEGA_0,dt)
+        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
 
         Etot[i] = E
+        Btot[i] = B
         Jtot[i] = J
+        Ni0tot[i] = Ni0
+        Ni1tot[i] = Ni1
         netot[i] = ne
         bar.next()
         
