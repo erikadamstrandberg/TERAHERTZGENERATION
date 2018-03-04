@@ -12,16 +12,21 @@ import Rampfunctions
 from plotnsave import plotnsave
 from progress.bar import ChargingBar
 from datetime import datetime
+from copy import deepcopy
 
 def runsim(
-        dt = 1),              # Time step
-        dz = 1),              # Space step
+        dt = 1,               # Time step
+        dz = 1,               # Space step
         time = 200,           # Temporal length of simulation window in units of dt
         size = 400,           # Spatial length of simulation window in units of dz
         pulsestart = 100,     # Start position of pulse
         pulselength = 100,    # Spatial length of pulse
         nu = 0,               # Collision rate
-        wavelength = 800e-9): # Laser wavelength
+        wavelength = 800e-9,  # Laser wavelength
+        ramplength = 1/10,    # Electron density initial ramp length as a fraction of size
+        rampdamp = 1/10,      # Electron density ramp parameter, (1-exp(-rampdamp*z))
+        plasmastopp = deepcopy(size),
+        plottime = int(deepcopy(time)/2)): 
     
     dim = [time,size]
     
@@ -63,39 +68,36 @@ def runsim(
     E0REAL = np.sqrt(2*I0/(EPSILON*LIGHTSPEED))
     plasmastart = pulselength+pulsestart    # where the electron density starts
     plasmastopp = size                      # Where it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window 
-    RAMPLENGTH = 60                        # Length of ramp
-    RAMP_DAMP = 0.1                        # 1-exp(-RAMP_DAMP*z) for the exponential ramp
-
     E0 = punit.Eplasma(E0REAL,omega_0)
     t0 = punit.tplasma(T0REAL,omega_0)
-    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt) # Sets up the laser pulse in the window
+    Laser.Gauss_forward(E,B,E0,pulselength,pulsestart,OMEGAPRIM,t0,dt) # Sets up the laser pulse in the window
     
     Natpunit = punit.nplasma(NatREAL,omega_0)
     Nat = np.ones(size)*Natpunit
-    Rampfunctions.Ramp_exp(RAMPLENGTH,plasmastart,plasmastopp,RAMP_DAMP,Natpunit,Nat,size,dt) # Sets up the atom density
+    Rampfunctions.Ramp_exp(plasmastart,plasmastopp,rampdamp,Natpunit,Nat,size,dt) # Creates a ramp for the electron density
 
     bar = ChargingBar('Simulation running', max = time)
     print(str(datetime.now())+': Beginning simulation.')
 
-    for i in range(1,time):
+    for i in range(1,time):    
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
-        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,omega_0,dt)
-        Ni0temp = Ni0
-        Ni1temp = Ni1
-        J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
-        netemp = ne
-        # Save all fields for the specific time.
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,omega_0,dt)
+        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
+
         Etot[i] = E
+        Btot[i] = B
         Jtot[i] = J
+        Ni0tot[i] = Ni0
+        Ni1tot[i] = Ni1
         netot[i] = ne
         bar.next()
-
+        
     bar.next()
     bar.finish()
     
     print(str(datetime.now())+': Simulation complete.')
 
     z = np.arange(len(Etot[0]))
-    plotnsave(z, Etot[140], filename = 'etot_t140')
+    plotnsave(z, Etot[plottime],)
     mplot.clf()
