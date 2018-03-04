@@ -35,13 +35,9 @@ def main():
     W2 = np.zeros(SIZE)
     W3 = np.zeros(SIZE)
     Ni2 = np.zeros(SIZE)
-    Ni2temp = np.zeros(SIZE)
     Ni1 = np.zeros(SIZE)
-    Ni1temp = np.zeros(SIZE)
     Ni0 = np.ones(SIZE)
-    Ni0temp = np.zeros(SIZE)
     ne = np.zeros(SIZE)
-    netemp = np.zeros(SIZE)
     
     Ni0tot = np.zeros(dim)
     Ni1tot = np.zeros(dim)
@@ -50,7 +46,6 @@ def main():
     Btot = np.zeros(dim)
     Jtot = np.zeros(dim)
     ntot = np.zeros(dim)
-    W1tot = np.zeros(dim)
 
     dt = double(1) #Time step
     dz = double(1) #Spatial step. Note: dz = dt is the magic time step in plasma units
@@ -82,7 +77,7 @@ def main():
     
     Natpunit = punit.nplasma(NatREAL,OMEGA_0)
     Nat = np.ones(SIZE)*Natpunit
-    Rampfunctions.Ramp_exp(RAMPLENGTH,PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt) # Sets up the atom density
+    Rampfunctions.Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dt) # Sets up the atom density
 
     #mplot.plot(plotz,Nat)             # Things for checking the setup
     #mplot.plot(plotz,E)
@@ -101,14 +96,14 @@ def main():
             
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
-        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0temp,Ni1temp,ne,W1,W2,W3,OMEGA_0,dt)
-        Ni0temp = Ni0
-        Ni1temp = Ni1
-        J = SpaceSolver.J(E,J,ne,netemp,nu,dt,dz)
-        netemp = ne
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,OMEGA_0,dt)
+        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
 
         Etot[i] = E
+        Btot[i] = B
         Jtot[i] = J
+        Ni0tot[i] = Ni0
+        Ni1tot[i] = Ni1
         netot[i] = ne
         bar.next()
         
@@ -118,11 +113,6 @@ def main():
     plotnsave.plotnsave(z, Etot[140], filename = 'etot_t140')
     mplot.clf()
     
-<<<<<<< HEAD
-=======
-   
-
->>>>>>> b9dea1f7606a87839a1526a29870f5059df8d4af
 def energy_total_1d(F):
     if np.ndim(F) == 0:
         print('Field seems to be a scalar. Please make sure it\'s a vector.')
