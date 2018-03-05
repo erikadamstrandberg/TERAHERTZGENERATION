@@ -26,7 +26,8 @@ def runsim(
         ramplength = 1/10,    # Electron density initial ramp length as a fraction of size
         rampdamp = 1/10,      # Electron density ramp parameter, (1-exp(-rampdamp*z))
         plasmastopp = deepcopy(size),
-        plottime = int(deepcopy(time)/2)): 
+        plottime = int(deepcopy(time)/2),
+        fname = ''): 
     
     dim = [time,size]
     
@@ -38,13 +39,9 @@ def runsim(
     W2 = np.zeros(size)
     W3 = np.zeros(size)
     Ni2 = np.zeros(size)
-    Ni2temp = np.zeros(size)
     Ni1 = np.zeros(size)
-    Ni1temp = np.zeros(size)
     Ni0 = np.ones(size)
-    Ni0temp = np.zeros(size)
     ne = np.zeros(size)
-    netemp = np.zeros(size)
     
     Ni0tot = np.zeros(dim)
     Ni1tot = np.zeros(dim)
@@ -52,8 +49,6 @@ def runsim(
     Etot = np.zeros(dim)
     Btot = np.zeros(dim)
     Jtot = np.zeros(dim)
-    ntot = np.zeros(dim)
-    W1tot = np.zeros(dim)
 
     LIGHTSPEED = const.speed_of_light
     EPSILON = const.epsilon_0 
@@ -79,12 +74,14 @@ def runsim(
     bar = ChargingBar('Simulation running', max = time)
     print(str(datetime.now())+': Beginning simulation.')
 
-    for i in range(1,time):    
+    for i in range(1,time):
+        # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
         ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,omega_0,dt)
         J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
 
+        # Save current time
         Etot[i] = E
         Btot[i] = B
         Jtot[i] = J
@@ -97,7 +94,9 @@ def runsim(
     bar.finish()
     
     print(str(datetime.now())+': Simulation complete.')
+    print(str(datetime.now())+': Plotting E-field for all space at time t = ' + plottime + '.')
 
     z = np.arange(len(Etot[0]))
-    plotnsave(z, Etot[plottime],)
-    mplot.clf()
+    if fname:
+        plotnsave(z, Etot[plottime], savetext = True, filename = fname)
+    mplot.clf() # In case any other plots are added, this line clears the plot from the figure.
