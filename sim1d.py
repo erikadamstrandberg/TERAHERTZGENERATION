@@ -26,9 +26,9 @@ def runsim(
         ramplength = 1/10,    # Electron density initial ramp length as a fraction of size
         rampdamp = 1/10,      # Electron density ramp parameter, (1-exp(-rampdamp*z))
         plasmastopp = deepcopy(size),
-        plottime = int(deepcopy(time)/2),
+        plottime = 0,
         fname = ''): 
-    
+    plottime = int(time/2)
     dim = [time,size]
     
     # Initialise the various fields to be calculated
@@ -94,9 +94,11 @@ def runsim(
     bar.finish()
     
     print(str(datetime.now())+': Simulation complete.')
-    print(str(datetime.now())+': Plotting E-field for all space at time t = ' + plottime + '.')
-
+    
     z = np.arange(len(Etot[0]))
     if fname:
+        plog('Saving E-field for all time and all space as ' + fname + '.')
         plotnsave(z, Etot[plottime], savetext = True, filename = fname)
-    mplot.clf() # In case any other plots are added, this line clears the plot from the figure.
+
+def plog(msg):
+    print(str(datetime.now()) + ': ' + msg)

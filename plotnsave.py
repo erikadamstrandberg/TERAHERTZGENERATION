@@ -8,9 +8,11 @@ import numpy as np
 
 from datetime import datetime
 
-def plotnsave(x, y, plotargs = '', filename = '', savetext = True, savepic = False):
+def plotnsave(x, y, plotargs = '', filename = '', dirname = '', savetext = True, savepic = False):
     """ Takes x and y as mandatory arguments and args and filename as optional. Plots y as a function of x. Passes plotargs to matlibplot.pyplot.plot. Saves as a .png file if filename is specified.
     """
+    if dirname:
+        filename = dirname + '/' + filename
     print(str(datetime.now())+': Beginning plot.')
     if plotargs:
         mplot.plot(x, y, plotargs)
