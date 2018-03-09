@@ -23,25 +23,16 @@ def main():
     SIZE = 22000
     PULSELENGTH = 10000
     
-    dim = [TIME,SIZE]
     E = np.zeros(SIZE)
     B = np.zeros(SIZE)
     J = np.zeros(SIZE)
     W1 = np.zeros(SIZE)
     W2 = np.zeros(SIZE)
     W3 = np.zeros(SIZE)
-    Ni2 = np.zeros(SIZE)
-    Ni1 = np.zeros(SIZE)
-    Ni0 = np.ones(SIZE)
-    ne = np.zeros(SIZE)
-    
-    Ni0tot = np.zeros(dim)
-    Ni1tot = np.zeros(dim)
-    netot = np.zeros(dim)
-    Etot = np.zeros(dim)
-    Btot = np.zeros(dim)
-    Jtot = np.zeros(dim)
-    ntot = np.zeros(dim)
+    Ni2 = (np.zeros(SIZE),np.zeros(SIZE))
+    Ni1 = (np.zeros(SIZE),np.zeros(SIZE))  # The second array is used for saving values one time loop
+    Ni0 = (np.ones(SIZE),np.zeros(SIZE))
+    ne = (np.zeros(SIZE),np.zeros(SIZE))
     
     c = const.speed_of_light
     epsilon = const.epsilon_0 
@@ -88,15 +79,12 @@ def main():
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
-        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,OMEGA_0,dt)
-        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
+        J = SpaceSolver.J(E,J,ne,nu,dt,dz)
 
         # Save current time
-        Etera1[i-1] = E[int(PLASMASTART+Sample1/dt)]
-        Etera2[i-1] = E[int(PLASMASTART+Sample2/dt)]
-        Ni0tot[i] = Ni0
-        Ni1tot[i] = Ni1
-        netot[i] = ne
+        Etera1[i-1] = E[PLASMASTART+Sample1/dt]
+        Etera2[i-1] = E[PLASMASTART+Sample2/dt]
         bar.next()
         
     bar.next()
@@ -105,10 +93,8 @@ def main():
     print(str(datetime.now())+': Simulation complete.')
     
     z = np.arange(len(Etera1))
-    plotnsave(z, Etera1, filename = 'Sample1')
-    plotnsave(z, Etera2, filename = 'Sample2')
+    plotnsave.plotnsave(z, Etera1, filename = 'Sample1')
+    plotnsave.plotnsave(z, Etera2, filename = 'Sample1')
 
 def plog(msg):
     print(str(datetime.now()) + ': ' + msg)
-if __name__ == '__main__':
-	main()
