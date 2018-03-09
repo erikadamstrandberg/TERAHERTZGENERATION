@@ -83,8 +83,8 @@ def main():
         J = SpaceSolver.J(E,J,ne,nu,dt,dz)
 
         # Save current time
-        Etera1[i-1] = E[PLASMASTART+Sample1/dt]
-        Etera2[i-1] = E[PLASMASTART+Sample2/dt]
+        Etera1[i-1] = E[int(PLASMASTART+Sample1/dt)]
+        Etera2[i-1] = E[int(PLASMASTART+Sample2/dt)]
         bar.next()
         
     bar.next()
@@ -96,5 +96,10 @@ def main():
     plotnsave.plotnsave(z, Etera1, filename = 'Sample1')
     plotnsave.plotnsave(z, Etera2, filename = 'Sample1')
 
+
 def plog(msg):
     print(str(datetime.now()) + ': ' + msg)
+    
+
+if __name__ == '__main__':
+    main()
