@@ -15,13 +15,13 @@ from datetime import datetime
 from copy import deepcopy
 
 def main():
-    dt = 0.1
-    dz = 0.1
+    dt = 0.02
+    dz = 0.02
     nu = 0
     
-    TIME = 14000
-    SIZE = 22000
-    PULSELENGTH = 10000
+    TIME = 2
+    SIZE = 180000
+    PULSELENGTH = 50000
     
     E = np.zeros(SIZE)
     B = np.zeros(SIZE)
@@ -38,7 +38,7 @@ def main():
     epsilon = const.epsilon_0 
     LAMBDA = 800e-9 
     f = c/LAMBDA
-    PULSESTART = 4000
+    PULSESTART = 20000
     OMEGAREAL = 2*np.pi*f
     OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
     OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
@@ -69,32 +69,43 @@ def main():
     Sample2real = 10e-6
     Sample2 = int(punit.splasma(Sample2real,OMEGA_0))
     
+    Sample3real = 100e-6
+    Sample3 = int(punit.splasma(Sample3real,OMEGA_0))
+    
     Etera1 = np.zeros(TIME)
     Etera2 = np.zeros(TIME)
-
+    Etera3 = np.zeros(TIME)
+    
     bar = ChargingBar('Simulation running', max = TIME)
     print(str(datetime.now())+': Beginning simulation.')
-
+    
     for i in range(1,TIME):
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
         ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
         J = SpaceSolver.J(E,J,ne,nu,dt,dz)
-
+    
         # Save current time
-        Etera1[i-1] = E[int(PLASMASTART+Sample1/dt)]
-        Etera2[i-1] = E[int(PLASMASTART+Sample2/dt)]
+        Etera1[i-1] = E[int(PLASMASTART+Sample1/dz)]
+        Etera2[i-1] = E[int(PLASMASTART+Sample2/dz)]
+        Etera3[i-1] = E[int(PLASMASTART+Sample3/dz)]
         bar.next()
         
     bar.next()
     bar.finish()
     
+    ne1 = ne[0][int(PLASMASTART+Sample1/dz)]
+    ne2 = ne[0][int(PLASMASTART+Sample2/dz)]
+    ne3 = ne[0][int(PLASMASTART+Sample3/dz)]
+    neE = np.array([ne1,ne2,ne3])
+    
     print(str(datetime.now())+': Simulation complete.')
     
-    z = np.arange(len(Etera1))
-    plotnsave.plotnsave(z, Etera1, filename = 'Sample1')
-    plotnsave.plotnsave(z, Etera2, filename = 'Sample1')
+    plotnsave(Etera1, filename = 'Sample1')
+    plotnsave(Etera2, filename = 'Sample2')
+    plotnsave(Etera3, filename = 'Sample3')
+    plotnsave(neE, filename = "neE")
 
 
 def plog(msg):
