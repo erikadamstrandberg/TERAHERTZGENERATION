@@ -34,10 +34,10 @@ def main():
     W1 = np.zeros(SIZE)
     W2 = np.zeros(SIZE)
     W3 = np.zeros(SIZE)
-    Ni2 = np.zeros(SIZE)
-    Ni1 = np.zeros(SIZE)
-    Ni0 = np.ones(SIZE)
-    ne = np.zeros(SIZE)
+    Ni2 = (np.zeros(SIZE),np.zeros(SIZE))
+    Ni1 = (np.zeros(SIZE),np.zeros(SIZE))
+    Ni0 = (np.ones(SIZE),np.zeros(SIZE))
+    ne = (np.zeros(SIZE),np.zeros(SIZE))
     
     Ni0tot = np.zeros(dim)
     Ni1tot = np.zeros(dim)
@@ -95,9 +95,9 @@ def main():
     for i in range(1,TIME):
             
         E = SpaceSolver.E(E,B,J,dt,dz)
-        B = SpaceSolver.B(E,B,dt,dz)   
-        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,OMEGA_0,dt)
-        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
+        B = SpaceSolver.B(E,B,dt,dz)
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
+        J = SpaceSolver.J(E,J,ne,nu,dt,dz)
 
         Etot[i] = E
         Btot[i] = B
