@@ -89,12 +89,12 @@ def main():
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)   
         ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,OMEGA_0,dt)
-	J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
+        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
 
         # Save current time
         Etera1[i-1] = E[int(PLASMASTART+Sample1/dt)]
         Etera2[i-1] = E[int(PLASMASTART+Sample2/dt)]
-	Ni0tot[i] = Ni0
+        Ni0tot[i] = Ni0
         Ni1tot[i] = Ni1
         netot[i] = ne
         bar.next()
