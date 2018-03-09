@@ -29,9 +29,12 @@ def runsim(
         plottime = 0,
         fname = ''): 
     plottime = int(time/2)
-    dim = [time,size]
+    dim = [int(time),int(size)]
     
     # Initialise the various fields to be calculated
+    size = int(size)
+    time = int(time)
+    
     E = np.zeros(size)
     B = np.zeros(size)
     J = np.zeros(size)
@@ -61,7 +64,7 @@ def runsim(
     I0 = 4e18 
     NatREAL = 7e26
     E0REAL = np.sqrt(2*I0/(EPSILON*LIGHTSPEED))
-    plasmastart = pulselength+pulsestart    # where the electron density starts
+    plasmastart = int(pulselength)+int(pulsestart)    # where the electron density starts
     plasmastopp = size                      # Where it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window 
     E0 = punit.Eplasma(E0REAL,omega_0)
     t0 = punit.tplasma(T0REAL,omega_0)
@@ -98,7 +101,7 @@ def runsim(
     z = np.arange(len(Etot[0]))
     if fname:
         plog('Saving E-field for all time and all space as ' + fname + '.')
-        plotnsave(z, Etot[plottime], savetext = True, filename = fname)
+        plotnsave(Etot, savetext = True, filename = fname)
 
 def plog(msg):
     print(str(datetime.now()) + ': ' + msg)
