@@ -27,25 +27,25 @@ def runsim(
         rampdamp = 1/10,      # Electron density ramp parameter, (1-exp(-rampdamp*z))
         plasmastopp = deepcopy(size),
         plottime = 0,
-        fname = ''): 
+        fname = ''):
     plottime = int(time/2)
     dim = [int(time),int(size)]
-    
+
     # Initialise the various fields to be calculated
     size = int(size)
     time = int(time)
-    
-    E = np.zeros(size)
-    B = np.zeros(size)
-    J = np.zeros(size)
-    W1 = np.zeros(size)
-    W2 = np.zeros(size)
-    W3 = np.zeros(size)
-    Ni2 = np.zeros(size)
-    Ni1 = np.zeros(size)
-    Ni0 = np.ones(size)
-    ne = np.zeros(size)
-    
+
+    E = np.zeros(SIZE)
+    B = np.zeros(SIZE)
+    J = np.zeros(SIZE)
+    W1 = np.zeros(SIZE)
+    W2 = np.zeros(SIZE)
+    W3 = np.zeros(SIZE)
+    Ni2 = (np.zeros(SIZE),np.zeros(SIZE))
+    Ni1 = (np.zeros(SIZE),np.zeros(SIZE))
+    Ni0 = (np.ones(SIZE),np.zeros(SIZE))
+    ne = (np.zeros(SIZE),np.zeros(SIZE))
+
     Ni0tot = np.zeros(dim)
     Ni1tot = np.zeros(dim)
     netot = np.zeros(dim)
@@ -54,22 +54,22 @@ def runsim(
     Jtot = np.zeros(dim)
 
     LIGHTSPEED = const.speed_of_light
-    EPSILON = const.epsilon_0 
+    EPSILON = const.epsilon_0
 
     f = LIGHTSPEED/wavelength
     omegareal = 2*np.pi*f
     OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
     omega_0 = omegareal/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
-    T0REAL = 50e-16 
-    I0 = 4e18 
+    T0REAL = 50e-16
+    I0 = 4e18
     NatREAL = 7e26
     E0REAL = np.sqrt(2*I0/(EPSILON*LIGHTSPEED))
     plasmastart = int(pulselength)+int(pulsestart)    # where the electron density starts
-    plasmastopp = size                      # Where it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window 
+    plasmastopp = size                      # Where it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window
     E0 = punit.Eplasma(E0REAL,omega_0)
     t0 = punit.tplasma(T0REAL,omega_0)
     Laser.Gauss_forward(E,B,E0,pulselength,pulsestart,OMEGAPRIM,t0,dt) # Sets up the laser pulse in the window
-    
+
     Natpunit = punit.nplasma(NatREAL,omega_0)
     Nat = np.ones(size)*Natpunit
     Rampfunctions.Ramp_exp(plasmastart,plasmastopp,rampdamp,Natpunit,Nat,size,dt) # Creates a ramp for the electron density
@@ -80,9 +80,9 @@ def runsim(
     for i in range(1,time):
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
-        B = SpaceSolver.B(E,B,dt,dz)   
-        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,Ni0tot[i-1],Ni1tot[i-1],ne,W1,W2,W3,omega_0,dt)
-        J = SpaceSolver.J(E,J,ne,netot[i-1],nu,dt,dz)
+        B = SpaceSolver.B(E,B,dt,dz)
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
+        J = SpaceSolver.J(E,J,ne,nu,dt,dz)
 
         # Save current time
         Etot[i] = E
@@ -92,12 +92,12 @@ def runsim(
         Ni1tot[i] = Ni1
         netot[i] = ne
         bar.next()
-        
+
     bar.next()
     bar.finish()
-    
+
     print(str(datetime.now())+': Simulation complete.')
-    
+
     z = np.arange(len(Etot[0]))
     if fname:
         plog('Saving E-field for all time and all space as ' + fname + '.')
