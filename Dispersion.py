@@ -15,22 +15,15 @@ plott = np.arange(TIME)
 plotz = np.arange(SIZE)
 dim = [TIME,SIZE]
 E = np.zeros(SIZE)
-Etemp = np.zeros(SIZE)
 B = np.zeros(SIZE)
 J = np.zeros(SIZE)
-n = np.zeros(SIZE)
-ntemp = np.zeros(SIZE)
 W1 = np.zeros(SIZE)
 W2 = np.zeros(SIZE)
 W3 = np.zeros(SIZE)
-Ni2 = np.zeros(SIZE)
-Ni2temp = np.zeros(SIZE)
-Ni1 = np.zeros(SIZE)
-Ni1temp = np.zeros(SIZE)
-Ni0 = np.zeros(SIZE)
-Ni0temp = np.zeros(SIZE)
-ne = np.zeros(SIZE)
-netemp = np.zeros(SIZE)
+Ni2 = (np.zeros(SIZE),np.zeros(SIZE))
+Ni1 = (np.zeros(SIZE),np.zeros(SIZE))
+Ni0 = (np.ones(SIZE),np.zeros(SIZE))
+ne = (np.zeros(SIZE),np.zeros(SIZE))
 Ni0tot = np.zeros(dim)
 Ni1tot = np.zeros(dim)
 netot = np.zeros(dim)
@@ -61,30 +54,30 @@ t0 = punit.tplasma(t0REAL,OMEGA_0)
 Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt)
 
 mplot.plot(plotz,E)
-mplot.axis([4500,5200,-0.1,0.1])
+#mplot.axis([4500,5200,-0.1,0.1])
 
 PLASMASTART = 5000
 
 Omegaplasma = 0.8
-ne[PLASMASTART:SIZE] = Omegaplasma
-netemp[PLASMASTART:SIZE] = Omegaplasma
-mplot.plot(plotz,ne)
+ne[0][PLASMASTART:SIZE] = Omegaplasma
+ne[1][PLASMASTART:SIZE] = Omegaplasma
+mplot.plot(plotz,ne[0])
 
 #%%
 for i in range(1,TIME):
     
     E = SpaceSolver.E(E,B,J,dt,dz)
     B = SpaceSolver.B(E,B,dt,dz)
-    J = SpaceSolver.J(E,J,ne,ntemp,nu,dt,dz)
+    J = SpaceSolver.J(E,J,ne,nu,dt,dz)
     
     Etot[i] = E
     Btot[i] = B
     Jtot[i] = J
     
 #%%
-t = 3000
+t = 2000
 mplot.plot(plotz,Etot[t])
-mplot.plot(plotz,ne*1)
+mplot.plot(plotz,ne[0]*1)
 
 #%%
 
