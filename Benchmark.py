@@ -19,7 +19,7 @@ def main():
     dz = 0.02
     nu = 0
     
-    TIME = 2
+    TIME = 180000
     SIZE = 180000
     PULSELENGTH = 50000
     
