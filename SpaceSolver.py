@@ -8,7 +8,7 @@ def E(E,B,J,dt,dz):
     for z in range(1,len(E)):
         
         # Update eq. for the E-field.
-        E[z] = E[z]-(dt/dz)*(B[z]-B[z-1])-dt*J[z-1]
+        E[z] = E[z]-(dt/dz)*(B[z]-B[z-1])-dt*J[z]
     return E
     
 def B(E,B,dt,dz):
@@ -19,10 +19,10 @@ def B(E,B,dt,dz):
     return B
 
 def J(E,J,ne,nu,dt,dz):
-    for z in range(len(J)):
+    for z in range(len(J)-1):
         
         # Update eq. for the J-field.
-        J[z] = ((1-nu*dt/2)*J[z]+(dt/2)*(ne[0][z]+ne[1][z])*E[z])/(1+nu*dt/2)
+        J[z] = ((1-nu*dt/2)*J[z]+(dt/2)*(ne[0][z]+ne[1][z])*E[z+1])/(1+nu*dt/2)
         
         # Makes temp. electron density need for the next time step.
         ne[1][z] = ne[0][z]
