@@ -8,7 +8,7 @@ def E(E,B,J,dt,dz):
     for z in range(1,len(E)):
         
         # Update eq. for the E-field.
-        E[z] = E[z]-(dt/dz)*(B[z]-B[z-1])-dt*J[z]
+        E[z] = E[z]-(dt/dz)*(B[z]-B[z-1])-dt*J[z-1]
     return E
     
 def B(E,B,dt,dz):
@@ -19,22 +19,22 @@ def B(E,B,dt,dz):
     return B
 
 def J(E,J,ne,nu,dt,dz):
-    for z in range(len(J)-1):
+    for z in range(len(J)):
         
         # Update eq. for the J-field.
-        J[z] = ((1-nu*dt/2)*J[z]+(dt/2)*(ne[0][z]+ne[1][z])*E[z-1])/(1+nu*dt/2)
+        J[z] = ((1-nu*dt/2)*J[z]+(dt/2)*(ne[0][z]+ne[1][z])*E[z])/(1+nu*dt/2)
         
         # Makes temp. electron density need for the next time step.
         ne[1][z] = ne[0][z]
     return J
 
 def N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt):
-    for z in range(len(E)-1):
+    for z in range(len(E)):
         
         # Calculates all the needed ionization propabilites.
-        W1[z] = Ion.Landau_element(E[z-1],OMEGA_0,1,dt)
-        W2[z] = Ion.Landau_element(E[z-1],OMEGA_0,2,dt)
-        W3[z] = Ion.Landau_element(E[z-1],OMEGA_0,3,dt)
+        W1[z] = Ion.Landau_element(E[z],OMEGA_0,1,dt)
+        W2[z] = Ion.Landau_element(E[z],OMEGA_0,2,dt)
+        W3[z] = Ion.Landau_element(E[z],OMEGA_0,3,dt)
         
         # How many neutral atoms are left?
         Ni0[0][z] = Nat[z]-Ni1[0][z]-Ni2[0][z]
