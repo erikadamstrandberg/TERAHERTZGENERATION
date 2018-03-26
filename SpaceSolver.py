@@ -8,7 +8,7 @@ def E(E,B,J,dt,dz):
     for z in range(1,len(E)):
         
         # Update eq. for the E-field.
-        E[z] = E[z]-(dt/dz)*(B[z]-B[z-1])-dt*J[z-1]
+        E[z] = E[z]-(dt/dz)*(B[z]-B[z-1])-dt*J[z]
     return E
     
 def B(E,B,dt,dz):
