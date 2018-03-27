@@ -60,4 +60,4 @@ def Landau_array(E,W,OMEGA_0,Z,dt):
             W[z] = (4*OMEGA_A*r_H[Z]**(5/2)*(E_a/np.abs(Ereal))*np.exp(-2*r_H[Z]**(3/2)*(E_a/(3*np.abs(Ereal)))))/OMEGA_0
         if dt*W[z] > 1:
             W[z] = 1
-     return W1
+     return W
