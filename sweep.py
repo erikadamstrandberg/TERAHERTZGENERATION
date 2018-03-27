@@ -20,9 +20,10 @@ def main():
     The first will always be "runsimulation.py" itself, so this one is uninteresting
     for our purposes.'''
     args = argv[1:]
-
     sweep = {}
-
+    if args[0] == 'help':
+        plog('Run as sweep.py [param] [start] [stop] [-dx or -steps] [step size or steps]')
+        return 0
     if args[0] in optionalargs: 
         sweep['param'] = args[0] # Doesn't need to check if it's a string since it'll imply the correct type by checking if the argument is in optionalargs.
     else:
