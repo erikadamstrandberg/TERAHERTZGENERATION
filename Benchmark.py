@@ -16,7 +16,7 @@ from copy import deepcopy
 
 def main():
     dt = 0.08
-    dz = 0.08
+    dz = 0.079
     nu = 0
     
     TIME = 32500
@@ -37,7 +37,7 @@ def main():
     
     c = const.speed_of_light
     epsilon = const.epsilon_0 
-    LAMBDA = 800e-9 
+    LAMBDA = 1e-6 
     f = c/LAMBDA
     PULSESTART = 20000
     OMEGAREAL = 2*np.pi*f
