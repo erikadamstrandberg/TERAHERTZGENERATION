@@ -15,8 +15,8 @@ from datetime import datetime
 from copy import deepcopy
 
 def main():
-    dt = 0.08
-    dz = 0.079
+    dt = 0.079
+    dz = 0.08
     nu = 0
     
     TIME = 32500
