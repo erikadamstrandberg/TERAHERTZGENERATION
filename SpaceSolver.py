@@ -3,32 +3,30 @@
 
 #%%
 import Ionization as Ion
+import numpy as np
 
 def E(E,B,J,dt,dz):
-    for z in range(1,len(E)):
-        
-        # Update eq. for the E-field.
-        E[z] = E[z]-(dt/dz)*(B[z]-B[z-1])-dt*J[z]
+    E = E-(dt/dz)*(B-np.roll(B,1))-dt*J
     return E
     
 def B(E,B,dt,dz):
-    for z in range(len(B)-1):
-        
-        # Update eq. for the B-field.
-        B[z] = B[z]-(dt/dz)*(E[z+1]-E[z])
+    B = B-(dt/dz)*(np.roll(E,-1)-E)
     return B
 
 def J(E,J,ne,nu,dt,dz):
-    for z in range(len(J)):
+    return J + dt*ne[0,:]*E
+    #dt2 = dt/2
+    #for z in range(len(J)):
         
         # Update eq. for the J-field.
-        J[z] = ((1-nu*dt/2)*J[z]+(dt/2)*(ne[0][z]+ne[1][z])*E[z])/(1+nu*dt/2)
+        #J[z] = ((1-nu*dt2)*J[z]+(dt2)*(ne[0][z]+ne[1][z])*E[z])/(1+nu*dt2)
         
         # Makes temp. electron density need for the next time step.
-        ne[1][z] = ne[0][z]
-    return J
+        #ne[1][z] = ne[0][z]
 
 def N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt):
+    
+    dt2 = dt/2
     for z in range(len(E)):
         
         # Calculates all the needed ionization propabilites.
@@ -40,8 +38,8 @@ def N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt):
         Ni0[0][z] = Nat[z]-Ni1[0][z]-Ni2[0][z]
         
         # Update eq. for the ionization density.
-        Ni1[0][z] = (Ni1[0][z]*(1-(dt/2)*W2[z])+(dt/2)*W1[z]*(Ni0[0][z]+Ni0[1][z]))/(1+(dt/2)*W2[z])
-        Ni2[0][z] = (Ni2[0][z]*(1-(dt/2)*W3[z])+(dt/2)*W2[z]*(Ni1[0][z]+Ni1[1][z]))/(1+(dt/2)*W3[z])
+        Ni1[0][z] = (Ni1[0][z]*(1-(dt2)*W2[z])+(dt2)*W1[z]*(Ni0[0][z]+Ni0[1][z]))/(1+(dt2)*W2[z])
+        Ni2[0][z] = (Ni2[0][z]*(1-(dt2)*W3[z])+(dt2)*W2[z]*(Ni1[0][z]+Ni1[1][z]))/(1+(dt2)*W3[z])
         
         # Updates the new electron density.
         ne[0][z] = 1*Ni1[0][z] + 2*Ni2[0][z]
