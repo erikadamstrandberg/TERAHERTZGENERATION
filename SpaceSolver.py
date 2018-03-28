@@ -25,9 +25,9 @@ def J(E,J,ne,nu,dt,dz):
 def N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt):
     
     # Calculates all the needed ionization propabilites.
-    W1 = Ion.Landau_array(E,W1,OMEGA_0,1,dt)
-    W2 = Ion.Landau_array(E,W2,OMEGA_0,2,dt)
-    W3 = Ion.Landau_array(E,W3,OMEGA_0,3,dt)
+    W1 = Ion.Landau_array_roll(E,OMEGA_0,1)
+    W2 = Ion.Landau_array_roll(E,OMEGA_0,2)
+    W3 = Ion.Landau_array_roll(E,OMEGA_0,3)
     
     # How many neutral atoms are left?
     Ni0[0][:] = Nat-Ni1[0][:]-Ni2[0][:]
