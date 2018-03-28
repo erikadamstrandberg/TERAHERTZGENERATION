@@ -102,9 +102,9 @@ def main():
         Etot[i] = E
         Btot[i] = B
         Jtot[i] = J
-        Ni0tot[i] = Ni0
-        Ni1tot[i] = Ni1
-        netot[i] = ne
+        Ni0tot[i] = Ni0[0]
+        Ni1tot[i] = Ni1[0]
+        netot[i] = ne[0]
         bar.next()
         
     print(str(datetime.now())+': Simulation complete.')
