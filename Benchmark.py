@@ -15,12 +15,12 @@ from datetime import datetime
 from copy import deepcopy
 
 #%%
-dt = 0.01
-dz = 0.01
+dt = 1
+dz = 1
 nu = 0
 
 TIME = int(2000/dz)
-SIZE = int(3000/dz)
+SIZE = int(4000/dz)
 PULSELENGTH = int(1250/dz)
 PULSESTART = 0
 
@@ -72,9 +72,13 @@ Sample2 = int(punit.splasma(Sample2real,OMEGA_0))
 Sample3real = 100e-6
 Sample3 = int(punit.splasma(Sample3real,OMEGA_0))
 
+#Sample4real = 1e-3
+#Sample4 = int(punit.splasma(Sample4real,OMEGA_0))
+
 Etera1 = np.zeros(TIME)
 Etera2 = np.zeros(TIME)
 Etera3 = np.zeros(TIME)
+#Etera4 = np.zeros(TIME)
 
 mplot.plot(np.arange(len(E)),E)
 mplot.plot(np.arange(len(E)),Nat)
@@ -88,14 +92,17 @@ for i in range(1,TIME):
     print("HEj")
     # Calculate all fields for current time
     E = SpaceSolver.E(E,B,J,dt,dz)
+    E[0] = 0
     B = SpaceSolver.B(E,B,dt,dz)   
     ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
     J = SpaceSolver.J(E,J,ne,nu,dt,dz)
+
 
     # Save current time
     Etera1[i-1] = E[int(PLASMASTART+Sample1/dz)]
     Etera2[i-1] = E[int(PLASMASTART+Sample2/dz)]
     Etera3[i-1] = E[int(PLASMASTART+Sample3/dz)]
+    #Etera4[i-1] = E[int(PLASMASTART+Sample4/dz)]
     #bar.next()
     
 bar.next()
