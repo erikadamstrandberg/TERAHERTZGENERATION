@@ -51,7 +51,7 @@ I0 = 4e18
 E0REAL = np.sqrt(2*I0/(epsilon*c))
 E0 = punit.Eplasma(E0REAL,OMEGA_0)
 t0 = punit.tplasma(t0REAL,OMEGA_0)
-Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt)
+Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt,dz)
 
 mplot.plot(plotz,E)
 #mplot.axis([4500,5200,-0.1,0.1])
