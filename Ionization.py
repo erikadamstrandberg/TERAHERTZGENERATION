@@ -61,3 +61,8 @@ def Landau_array(E,W,OMEGA_0,Z,dt):
         if dt*W[z] > 1:
             W[z] = 1
     return W
+
+def Landau_array_roll(E,OMEGA_0,Z):
+    Ereal = Plasmaunit.Ereal(E,OMEGA_0)
+    W = (4*OMEGA_A*r_H[Z]**(5/2)*(E_a/np.abs(Ereal+1e-100))*np.exp(-2*r_H[Z]**(3/2)*(E_a/(3*np.abs(Ereal+1e-100)))))/OMEGA_0   
+    return W
