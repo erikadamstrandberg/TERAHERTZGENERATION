@@ -15,13 +15,13 @@ from datetime import datetime
 from copy import deepcopy
 
 def main():
-    dt = 0.079
-    dz = 0.08
+    dt = 0.15
+    dz = 0.16
     nu = 0
     
-    TIME = 32500
-    SIZE = 60000
-    PULSELENGTH = 12500
+    TIME = 16250
+    SIZE = 31000
+    PULSELENGTH = 6250
 
     
     E = np.zeros(SIZE)
