@@ -73,7 +73,7 @@ def runsim(
     E0 = punit.Eplasma(E0REAL,omega_0)
     t0 = punit.tplasma(T0REAL,omega_0)
 
-    Laser.Gauss_forward(E,B,E0,pulselength,pulsestart,OMEGAPRIM,t0,dt) # Sets up the laser pulse in the window
+    Laser.Gauss_forward(E,B,E0,pulselength,pulsestart,OMEGAPRIM,t0,dt,dz) # Sets up the laser pulse in the window
     Natpunit = punit.nplasma(NatREAL,omega_0)
     Nat = np.ones(size)*Natpunit
     Nat[:int(len(Nat)/2)] = 0
