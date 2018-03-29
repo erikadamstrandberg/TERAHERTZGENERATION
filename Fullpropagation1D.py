@@ -21,8 +21,16 @@ def main():
     #print(sys.argv[1][0])
     
     # Define the length and size of the simulation window. Units are in dt and dz respectively.
-    TIME = 200
-    SIZE = 400
+    
+    dt = 1
+    dz = 1
+    
+    TIMESTEPS = 200
+    SIZESTEPS = 400
+    
+    TIME = int(TIMESTEPS/dt)
+    SIZE = int(SIZESTEPS/dz)
+    
     plott = np.arange(TIME)
     plotz = np.arange(SIZE)
     dim = [TIME,SIZE]
@@ -46,9 +54,6 @@ def main():
     Btot = np.zeros(dim)
     Jtot = np.zeros(dim)
     ntot = np.zeros(dim)
-
-    dt = double(1) #Time step
-    dz = double(1) #Spatial step. Note: dz = dt is the magic time step in plasma units
 
     c = const.speed_of_light
     epsilon = const.epsilon_0 
