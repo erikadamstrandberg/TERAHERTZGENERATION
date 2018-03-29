@@ -108,10 +108,90 @@ def main():
     plotnsave(Etera3, filename = 'Sample3')
     plotnsave(neE, filename = "neE")
 
+c = const.speed_of_light
+epsilon = const.epsilon_0 
+LAMBDA = 1e-6
+f = c/LAMBDA
+OMEGAREAL = 2*np.pi*f
+OMEGAPRIM = 1                     # this is the plasma omega, use this everywhere in the code
+OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
+t0REAL = 50e-15
+I0 = 150e16 
+NatREAL = 3e25
+E0REAL = np.sqrt(2*I0/(epsilon*c))
 
-def plog(msg):
-    print(str(datetime.now()) + ': ' + msg)
+E0 = punit.Eplasma(E0REAL,OMEGA_0)
+t0 = punit.tplasma(t0REAL,OMEGA_0)
+
+xi = 0.1
+phi = np.pi/2
+Laser.TwoC_forward(E,B,E0,xi,phi,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt,dz)
+
+Natpunit = punit.nplasma(NatREAL,OMEGA_0)
+Nat = np.ones(SIZE)*Natpunit
+
+PLASMASTART = PULSELENGTH+PULSESTART
+PLASMASTOPP = SIZE
+RAMP_DAMP = 0.1
+
+Rampfunctions.Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dz)
+
+Sample1real = 3e-6
+Sample1 = int(punit.splasma(Sample1real,OMEGA_0))
+
+Sample2real = 10e-6
+Sample2 = int(punit.splasma(Sample2real,OMEGA_0))
+
+Sample3real = 100e-6
+Sample3 = int(punit.splasma(Sample3real,OMEGA_0))
+
+#Sample4real = 1e-3
+#Sample4 = int(punit.splasma(Sample4real,OMEGA_0))
+
+Etera1 = np.zeros(TIME)
+Etera2 = np.zeros(TIME)
+Etera3 = np.zeros(TIME)
+#Etera4 = np.zeros(TIME)
+
+mplot.plot(np.arange(len(E)),E)
+mplot.plot(np.arange(len(E)),Nat)
+
+
+#%%
+#bar = ChargingBar('Simulation running', max = TIME)
+#print(str(datetime.now())+': Beginning simulation.')
+
+for i in range(1,TIME):
+    print("HEj")
+    # Calculate all fields for current time
+    E = SpaceSolver.E(E,B,J,dt,dz)
+    E[0] = 0
+    B = SpaceSolver.B(E,B,dt,dz)   
+    ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
+    J = SpaceSolver.J(E,J,ne,nu,dt,dz)
+
+
+    # Save current time
+    Etera1[i-1] = E[int(PLASMASTART+Sample1/dz)]
+    Etera2[i-1] = E[int(PLASMASTART+Sample2/dz)]
+    Etera3[i-1] = E[int(PLASMASTART+Sample3/dz)]
+    #Etera4[i-1] = E[int(PLASMASTART+Sample4/dz)]
+    #bar.next()
     
+bar.next()
+bar.finish()
 
-if __name__ == '__main__':
-    main()
+ne1 = ne[0][int(PLASMASTART+Sample1/dz)]
+ne2 = ne[0][int(PLASMASTART+Sample2/dz)]
+ne3 = ne[0][int(PLASMASTART+Sample3/dz)]
+neE = np.array([ne1,ne2,ne3])
+
+print(str(datetime.now())+': Simulation complete.')
+
+z = np.arange(len(Etera1))
+plotnsave(z, Etera1, filename = 'Sample1')
+plotnsave(z, Etera2, filename = 'Sample2')
+plotnsave(z, Etera3, filename = 'Sample3')
+
+z = np.arange(3)
+plotnsave(z, neE, filename = "neE")

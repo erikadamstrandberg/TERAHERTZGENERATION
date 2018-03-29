@@ -10,7 +10,7 @@ from plog import plog
 
 from datetime import datetime
 
-def plotnsave(y, plotargs = '', filename = '', dirname = '', savetext = True, savepic = False, inputfile = '', axis = 0, ylab = '', xlab = ''):
+def plotnsave(x, y, plotargs = '', filename = '', dirname = '', savetext = True, savepic = False, inputfile = '', axis = np.array([]), ylab =  np.array([]), xlab =  np.array([]), xticks =  np.array([]), yticks =  np.array([]), cols = False):
     """ Takes x and y as mandatory arguments and args and filename as optional. Plots y as a function of x. Passes plotargs to matlibplot.pyplot.plot. Saves as a .png file if filename is specified.
     """
     #print(y)
@@ -24,17 +24,24 @@ def plotnsave(y, plotargs = '', filename = '', dirname = '', savetext = True, sa
             for i in range(len(y)):
                 mplot.plot(y[i])
         else:
-            mplot.plot(y)
-    if axis:
+            if x.any():
+                mplot.plot(x, y)
+            else:
+                mplot.plot(y)
+    if axis.any():
         if len(axis) == 4:
             mplot.axis(axis)
         else:
             plog('Axis has the wrong dimensions (len(axis) = ' + str(len(axis)) + '), ignoring.')
-    if xlab:
+    if xlab.any():
         mplot.xlabel(xlab)
-    if ylab:
+    if ylab.any():
         mplot.ylabel(ylab)
-            
+    if xticks.any():
+        mplot.xticks(xticks)
+    if yticks.any():
+        mplot.yticks(yticks)
+    mplot.yscale('log')
     if filename:
         if savepic:
             plog('Saving ' + filename + '.png.')
@@ -52,19 +59,21 @@ def plotnsave(y, plotargs = '', filename = '', dirname = '', savetext = True, sa
 def collectdata():
     filename = input('Enter csv file to load (sans extension).\n')
     try:
-        with open(filename + '.csv') as f:
-            reader = csv.reader(f)
-            lister = list(reader)
-            row_count = sum(1 for row in lister)
-            plog('File has {0} rows. Which row to plot?'.format(row_count))
+        data = np.genfromtxt(filename + '.csv')
+        transpose = input('Transpose input? y/n')
+        rowcol = 'row'
+        if transpose.lower() == 'y':
+            rowcol = 'col'
+            data = np.transpose(data)
+        if len(np.shape(data)) != 1:
+            plog('File has {0} {1}. Which row to plot?'.format(np.shape(data)[0], rowcol))
             row = input('')
-            #print(lister)
-            try:
-                row = int(row)
-                plotnsave(np.loadtxt(lister[row], delimiter = ','), filename = filename, savepic = True, savetext = False)
-            except ValueError:
-                plog('Row should be an integer. Terminating.')
-                return 0
+        try:
+            row = int(row)
+            plotnsave(data[row], filename = filename, savepic = True, savetext = False)
+        except ValueError:
+            plog('Row should be an integer. Terminating.')
+            return 0
     except IOError:
         plog('Couldn\'t find or open file.')
         

@@ -73,7 +73,7 @@ def main():
 
     E0 = punit.Eplasma(E0REAL,OMEGA_0)
     t0 = punit.tplasma(t0REAL,OMEGA_0)
-    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt) # Sets up the laser pulse in the window
+    Laser.Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt,dz) # Sets up the laser pulse in the window
     
     Natpunit = punit.nplasma(NatREAL,OMEGA_0)
     Nat = np.ones(SIZE)*Natpunit
@@ -102,9 +102,9 @@ def main():
         Etot[i] = E
         Btot[i] = B
         Jtot[i] = J
-        Ni0tot[i] = Ni0
-        Ni1tot[i] = Ni1
-        netot[i] = ne
+        Ni0tot[i] = Ni0[0]
+        Ni1tot[i] = Ni1[0]
+        netot[i] = ne[0]
         bar.next()
         
     print(str(datetime.now())+': Simulation complete.')
