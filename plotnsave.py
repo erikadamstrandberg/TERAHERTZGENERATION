@@ -10,7 +10,7 @@ from plog import plog
 
 from datetime import datetime
 
-def plotnsave(x, y, plotargs = '', filename = '', dirname = '', savetext = True, savepic = False, inputfile = '', axis = np.array([]), ylab =  np.array([]), xlab =  np.array([]), xticks =  np.array([]), yticks =  np.array([]), cols = False):
+def plotnsave( y, plotargs = '', filename = '', dirname = '', savetext = True, savepic = False, inputfile = '', axis = np.array([]), ylab =  np.array([]), xlab =  np.array([]), xticks =  np.array([]), yticks =  np.array([]), cols = False):
     """ Takes x and y as mandatory arguments and args and filename as optional. Plots y as a function of x. Passes plotargs to matlibplot.pyplot.plot. Saves as a .png file if filename is specified.
     """
     #print(y)
