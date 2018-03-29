@@ -14,6 +14,7 @@ from progress.bar import ChargingBar
 from datetime import datetime
 from copy import deepcopy
 from time import gmtime, strftime
+from plog import plog
 
 def main():
     dt = 0.15
@@ -84,6 +85,7 @@ def main():
     bar = ChargingBar('Simulation running', max = TIME)
     print(str(datetime.now())+': Beginning simulation.')
     timeinit = strftime('%H%M', gmtime())
+    plog('dt = {}, dz =  {}'.format(dt, dz))
     for i in range(1,TIME):
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
