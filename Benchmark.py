@@ -19,8 +19,11 @@ dt = 1
 dz = 1
 nu = 0
 
-TIME = int(3000/dz)
-SIZE = int(3200/dz)
+TTMESTEPS = 3000
+SIZESTEPS = 3200
+
+TIME = int(TIMESTEPS/dz)
+SIZE = int(SIZESTEPS/dz)
 PULSELENGTH = int(1250/dz)
 PULSESTART = 0
 
