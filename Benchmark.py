@@ -13,11 +13,12 @@ from plotnsave import plotnsave
 from progress.bar import ChargingBar
 from datetime import datetime
 from copy import deepcopy
-from time import gmtime, strftime
+from time import localtime, strftime
 from plog import plog
 from sys import argv
 
 def main():
+    T0REAL = 50e-15
     args = argv[1:]
     if 't0' in args and len(args) == 2:
         T0REAL = args[1]        
@@ -87,10 +88,13 @@ def main():
     Etera1 = np.zeros(TIME)
     Etera2 = np.zeros(TIME)
     Etera3 = np.zeros(TIME)
-    
+
+    mplot.plot(Nat)
+    mplot.savefig('nattest.png')
+    return 0
     bar = ChargingBar('Simulation running', max = TIME)
     print(str(datetime.now())+': Beginning simulation.')
-    timeinit = strftime('%H%M', gmtime())
+    timeinit = strftime('%H%M', localtime())
     plog('t0 = {} seconds'.format(T0REAL))
     for i in range(1,TIME):
         # Calculate all fields for current time
