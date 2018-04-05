@@ -33,8 +33,8 @@ def main():
     TIME = int(TIMESTEPS/dt)
     SIZE = int(SIZESTEPS/dz)
     PULSELENGTH = int(1250/dz)
-    PULSESTART = 0
-    
+    PULSESTART = int((SIZE/2)-PULSELENGTH)
+
     E = np.zeros(SIZE)
     B = np.zeros(SIZE)
     J = np.zeros(SIZE)
@@ -70,7 +70,7 @@ def main():
     Natpunit = punit.nplasma(NatREAL,OMEGA_0)
     Nat = np.ones(SIZE)*Natpunit
     
-    PLASMASTART = PULSELENGTH+PULSESTART
+    PLASMASTART = int(SIZE/2)
     PLASMASTOPP = SIZE
     RAMP_DAMP = 0.1
     
@@ -89,11 +89,19 @@ def main():
     Etera2 = np.zeros(TIME)
     Etera3 = np.zeros(TIME)
 
+    # Plot starting E-field and starting plasma.
+    #mplot.plot(Nat)
+    #mplot.plot(E)
+    #mplot.savefig('testing.png')
+    #return 0
+    
     bar = ChargingBar('Simulation running', max = TIME)
     print(str(datetime.now())+': Beginning simulation.')
     timeinit = strftime('%H%M', localtime())
     plog('t0 = {} seconds'.format(T0REAL))
     goodtimes = np.linspace(1, 17, 17)*1000
+    #Etot = np.zeros(len(size))
+    #k = 0
     for i in range(1,TIME):
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
@@ -101,13 +109,14 @@ def main():
         ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
         J = SpaceSolver.J(E,J,ne,nu,dt,dz)
         E[0] = 0
-        if np.max(E) > 1e10:
-            break
         # Save current time
         Etera1[i-1] = E[int(PLASMASTART+Sample1/dz)]
         Etera2[i-1] = E[int(PLASMASTART+Sample2/dz)]
         Etera3[i-1] = E[int(PLASMASTART+Sample3/dz)]
         bar.next()
+        if i in goodtimes:
+            mplot.plot(E)
+            mplot.savefig('E' + str(i) + '.png')
         
         
     bar.next()
