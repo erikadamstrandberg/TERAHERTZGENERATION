@@ -116,7 +116,8 @@ def main():
         bar.next()
         if i in goodtimes:
             mplot.plot(E)
-            mplot.savefig('E' + str(i) + '.png')
+            mplot.savefig('E_' + str(i) + '.png')
+            mplot.clf()
         
         
     bar.next()
