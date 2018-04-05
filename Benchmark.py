@@ -15,10 +15,15 @@ from datetime import datetime
 from copy import deepcopy
 from time import gmtime, strftime
 from plog import plog
+from sys import argv
 
 def main():
-    dt = 0.15
-    dz = 0.16
+    args = argv[1:]
+    if 't0' in args and len(args) == 2:
+        T0REAL = args[1]        
+            
+    dt = 0.15/2
+    dz = 0.16/2
     nu = 0
 
     TIMESTEPS = 3000
@@ -58,7 +63,8 @@ def main():
     
     xi = 0.1
     phi = np.pi/2
-    Laser.TwoC_forward(E,B,E0,xi,phi,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt, dz)
+    #Laser.TwoC_forward(E,B,E0,xi,phi,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt, dz)
+    Laser.Gauss_forward(E, B, E0, PULSELENGTH, PULSESTART, OMEGAPRIM, t0, dt, dz)
     
     Natpunit = punit.nplasma(NatREAL,OMEGA_0)
     Nat = np.ones(SIZE)*Natpunit
@@ -85,7 +91,7 @@ def main():
     bar = ChargingBar('Simulation running', max = TIME)
     print(str(datetime.now())+': Beginning simulation.')
     timeinit = strftime('%H%M', gmtime())
-    plog('dt = {}, dz =  {}'.format(dt, dz))
+    plog('t0 = {} seconds'.format(T0REAL))
     for i in range(1,TIME):
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
@@ -109,7 +115,7 @@ def main():
     neE = np.array([ne1,ne2,ne3])
     
     print(str(datetime.now())+': Simulation complete.')
-    filename = 'bm_' + timeinit + 'dt' + str(dt) + 'dz' + str(dz) + '_'
+    filename = 'bm_' + timeinit + 't0' + str(T0REAL) +  '_'
     plotnsave(Etera1, filename = filename + 's' + str(1))
     plotnsave(Etera2, filename = filename + 's' + str(2))
     plotnsave(Etera3, filename = filename + 's' + str(3))
