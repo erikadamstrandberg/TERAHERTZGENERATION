@@ -99,7 +99,7 @@ def main():
     print(str(datetime.now())+': Beginning simulation.')
     timeinit = strftime('%H%M', localtime())
     plog('t0 = {} seconds'.format(T0REAL))
-    goodtimes = np.linspace(1, 17, 17)*1000
+    goodtimes = np.linspace(4, 17, 17)*1000
     #Etot = np.zeros(len(size))
     #k = 0
     for i in range(1,TIME):
