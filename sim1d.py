@@ -90,13 +90,13 @@ def runsim(
     #simtimes = simtimes.astype(int)
 
     Sample1real = 3e-6
-    Sample1 = int(punit.splasma(Sample1real,OMEGA_0))
+    Sample1 = int(punit.splasma(Sample1real,omega_0))
     
     Sample2real = 10e-6
-    Sample2 = int(punit.splasma(Sample2real,OMEGA_0))
+    Sample2 = int(punit.splasma(Sample2real,omega_0))
     
     Sample3real = 100e-6
-    Sample3 = int(punit.splasma(Sample3real,OMEGA_0))
+    Sample3 = int(punit.splasma(Sample3real,omega_0))
     
     Etera1 = np.zeros(time)
     Etera2 = np.zeros(time)
