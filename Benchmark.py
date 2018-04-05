@@ -89,8 +89,8 @@ def main():
     Etera2 = np.zeros(TIME)
     Etera3 = np.zeros(TIME)
 
-    mplot.plot(Nat)
-    mplot.savefig('nattest.png')
+    mplot.plot(E)
+    mplot.savefig('Etest.png')
     return 0
     bar = ChargingBar('Simulation running', max = TIME)
     print(str(datetime.now())+': Beginning simulation.')
