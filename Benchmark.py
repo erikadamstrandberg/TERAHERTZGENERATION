@@ -90,6 +90,7 @@ def main():
     Etera3 = np.zeros(TIME)
 
     mplot.plot(E)
+    mplot.plog(Nat)
     mplot.savefig('Etest.png')
     return 0
     bar = ChargingBar('Simulation running', max = TIME)
