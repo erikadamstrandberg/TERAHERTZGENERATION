@@ -89,14 +89,11 @@ def main():
     Etera2 = np.zeros(TIME)
     Etera3 = np.zeros(TIME)
 
-    mplot.plot(E)
-    mplot.plot(Nat)
-    mplot.savefig('Etest.png')
-    return 0
     bar = ChargingBar('Simulation running', max = TIME)
     print(str(datetime.now())+': Beginning simulation.')
     timeinit = strftime('%H%M', localtime())
     plog('t0 = {} seconds'.format(T0REAL))
+    goodtimes = np.linspace(1, 17, 17)*1000
     for i in range(1,TIME):
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
@@ -104,12 +101,14 @@ def main():
         ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
         J = SpaceSolver.J(E,J,ne,nu,dt,dz)
         E[0] = 0
-        
+        if np.max(E) > 1e10:
+            break
         # Save current time
         Etera1[i-1] = E[int(PLASMASTART+Sample1/dz)]
         Etera2[i-1] = E[int(PLASMASTART+Sample2/dz)]
         Etera3[i-1] = E[int(PLASMASTART+Sample3/dz)]
         bar.next()
+        
         
     bar.next()
     bar.finish()
