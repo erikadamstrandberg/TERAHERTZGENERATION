@@ -29,9 +29,14 @@ def runsim(
         plasmastopp = deepcopy(size),
         plottime = 0,
         fname = '',
-        savesteps = 10):
+        savesteps = 10,
+        t0real = 50e-16):
     dim = [int(time),int(size)]
 
+    pulsestart = int(size/2) - pulselength
+
+
+    
     # Initialise the various fields to be calculated
     size = int(size)
     time = int(time)
@@ -64,34 +69,44 @@ def runsim(
     omegareal = 2*np.pi*f               # laser angular frequency
     OMEGAPRIM = 1                       # this is the normalised omega, use this everywhere in the code
     omega_0 = omegareal/OMEGAPRIM       # this is the laser omega, use this as argument in punits
-    T0REAL = 50e-16
-    I0 = 4e18
+    I0 = 4e18 
     NatREAL = 3e25
     E0REAL = np.sqrt(2*I0/(EPSILON*LIGHTSPEED))
     plasmastart = int(size/2)    # where the electron density starts
     plasmastopp = size                      # Where it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window
     E0 = punit.Eplasma(E0REAL,omega_0)
-    t0 = punit.tplasma(T0REAL,omega_0)
+    t0 = punit.tplasma(t0real,omega_0)
 
     Laser.Gauss_forward(E,B,E0,pulselength,pulsestart,OMEGAPRIM,t0,dt,dz) # Sets up the laser pulse in the window
     Natpunit = punit.nplasma(NatREAL,omega_0)
     Nat = np.ones(size)*Natpunit
-    Nat[:int(len(Nat)/2)] = 0
-
     Rampfunctions.Ramp_exp(plasmastart,plasmastopp,rampdamp,Natpunit,Nat,size,dt) # Creates a ramp for the electron density
     ne[0] = Nat
 
     bar = ChargingBar('Simulation running', max = time)
     print(str(datetime.now())+': Beginning simulation.')
 
-    simtimes = np.linspace(0.0, 1.0, savesteps)*time
-    simtimes = simtimes.astype(int)
+    #simtimes = np.linspace(0.0, 1.0, savesteps)*time
+    #simtimes = simtimes.astype(int)
+
+    Sample1real = 3e-6
+    Sample1 = int(punit.splasma(Sample1real,OMEGA_0))
+    
+    Sample2real = 10e-6
+    Sample2 = int(punit.splasma(Sample2real,OMEGA_0))
+    
+    Sample3real = 100e-6
+    Sample3 = int(punit.splasma(Sample3real,OMEGA_0))
+    
+    Etera1 = np.zeros(time)
+    Etera2 = np.zeros(time)
+    Etera3 = np.zeros(time)
 
     for i in range(1,time):
         # Calculate all fields for current time
         E = SpaceSolver.E(E,B,J,dt,dz)
         B = SpaceSolver.B(E,B,dt,dz)
-        #ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,omega_0,dt)
+        ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,omega_0,dt)
         J = SpaceSolver.J(E,J,ne,nu,dt,dz)
         #E[0] = 0
         #B[0] = 0
@@ -100,14 +115,17 @@ def runsim(
         #E[0] = 0
         #B[0] = 0
 
+        Etera1[i-1] = E[int(plasmastart+sample1/dz)]
+        Etera2[i-1] = E[int(plasmastart+Sample2/dz)]
+        Etera3[i-1] = E[int(plasmastart+Sample3/dz)]
         # Save current time
-        if i in simtimes:
-            Etot = np.vstack([Etot, E])
-            Btot = np.vstack([Btot, B])
-            Jtot = np.vstack([Jtot, J])
-            Ni0tot.append(Ni0)
-            Ni1tot.append(Ni1)
-            netot = np.vstack([netot, ne[0]])
+        # if i in simtimes:
+        #     Etot = np.vstack([Etot, E])
+        #     Btot = np.vstack([Btot, B])
+        #     Jtot = np.vstack([Jtot, J])
+        #     Ni0tot.append(Ni0)
+        #     Ni1tot.append(Ni1)
+        #     netot = np.vstack([netot, ne[0]])
 
         bar.next()
     netot = ne[0]
@@ -115,7 +133,19 @@ def runsim(
     bar.finish()
     
     print(str(datetime.now())+': Simulation complete.')
+        
+    ne1 = ne[0][int(PLASMASTART+Sample1/dz)]
+    ne2 = ne[0][int(PLASMASTART+Sample2/dz)]
+    ne3 = ne[0][int(PLASMASTART+Sample3/dz)]
+    neE = np.array([ne1,ne2,ne3])
 
+    filename = 'bm_' + timeinit + 't0' + str(t0) + '_'
+    plotnsave(Etera1, filename = filename + 's' + str(1))
+    plotnsave(Etera2, filename = filename + 's' + str(2))
+    plotnsave(Etera3, filename = filename + 's' + str(3))
+    plotnsave(neE, filename = filename + 'n')
+
+    
     #z = np.arange(len(Etot[0]))
     plotting = []
     #print(netot[0])
