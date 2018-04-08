@@ -10,10 +10,10 @@ def Gauss_forward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt,dz):
     STOPP = PULSELENGTH/2
     t = dz*np.arange(START,STOPP,1)
     for i in range(len(El)):
-        El[i] = E0*np.cos(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2)))
+        El[i] = E0*np.sin(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2)))
     t = dz*np.arange(START,STOPP,1)+(dz-dt)/2
     for i in range(len(Bl)):
-        Bl[i] = E0*(np.cos(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2))))
+        Bl[i] = E0*(np.sin(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2))))
     E[PULSESTART:PULSESTART+PULSELENGTH] = El
     B[PULSESTART:PULSESTART+PULSELENGTH] = Bl
     
@@ -24,10 +24,10 @@ def Gauss_backward(E,B,E0,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt,dz):
     STOPP = PULSELENGTH/2
     t = dz*np.arange(START,STOPP,1)
     for i in range(len(El)):
-        El[i] = E0*np.cos(OMEGAPRIM*t[i-1])*np.exp(-(t[i-1]**2/(2*t0**2)))
+        El[i] = E0*np.sin(OMEGAPRIM*t[i-1])*np.exp(-(t[i-1]**2/(2*t0**2)))
     t = dz*np.arange(START,STOPP,1)-(dz-dt)/2
     for i in range(len(Bl)):
-        Bl[i] = -E0*(np.cos(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2))))
+        Bl[i] = -E0*(np.sin(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2))))
     E[PULSESTART:PULSESTART+PULSELENGTH] = El
     B[PULSESTART:PULSESTART+PULSELENGTH] = Bl
    
@@ -38,9 +38,9 @@ def TwoC_forward(E,B,E0,xi,phi,PULSELENGTH,PULSESTART,OMEGAPRIM,t0,dt,dz):
     STOPP = PULSELENGTH/2
     t = dz*np.arange(START,STOPP,1)
     for i in range(len(El)):
-        El[i] = E0*(np.sqrt(1-xi)*np.cos(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2)))+np.sqrt(xi)*np.cos(2*OMEGAPRIM*t[i]+phi)*np.exp(-4*(t[i]**2/(2*t0**2))))
+        El[i] = E0*(np.sqrt(1-xi)*np.sin(OMEGAPRIM*t[i])+np.sqrt(xi)*np.sin(2*OMEGAPRIM*t[i]+phi))*np.exp(-(t[i]**2/(2*t0**2)))
     t = dz*np.arange(START,STOPP,1)+(dz-dt)/2
     for i in range(len(Bl)):
-        Bl[i] = E0*(np.sqrt(1-xi)*np.cos(OMEGAPRIM*t[i])*np.exp(-(t[i]**2/(2*t0**2)))+np.sqrt(xi)*np.cos(2*OMEGAPRIM*t[i]+phi)*np.exp(-4*(t[i]**2/(2*t0**2))))
+        Bl[i] = E0*(np.sqrt(1-xi)*np.sin(OMEGAPRIM*t[i])+np.sqrt(xi)*np.sin(2*OMEGAPRIM*t[i]+phi))*np.exp(-(t[i]**2/(2*t0**2)))
     E[PULSESTART:PULSESTART+PULSELENGTH] = El
     B[PULSESTART:PULSESTART+PULSELENGTH] = Bl
