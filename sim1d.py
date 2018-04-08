@@ -161,7 +161,6 @@ def runsim(
             Ni1tot.append(Ni1)
             netot = np.vstack([netot, ne[0]])
         bar.next()
-        break
     netot = ne[0]
     bar.next()
     bar.finish()
