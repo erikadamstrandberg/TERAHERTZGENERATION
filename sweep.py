@@ -13,7 +13,7 @@ def main():
         'dt', 'dz', 'time', 'size',
         'pulsestart', 'pulselength', 'nu', 'wavelength',
         'ramplength', 'rampdamp', 'plasmastopp', 'plottime',
-        'fname']
+        'fname', 't0real']
     param = {}
     
     '''argv contains the arguments entered after python3 runsimulation.py.
