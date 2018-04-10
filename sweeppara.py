@@ -20,12 +20,12 @@ PULSESTART = int(500/dz)
 PLASMASTART = PULSELENGTH+PULSESTART
 PLASMASTOPP = SIZE
 
-diff = 0.5
+diff = 0.02
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
 
-diff = np.pi/2
+diff = np.pi/40
 START = 0
 STOPP = np.pi+diff
 phi = np.arange(START,STOPP,diff)
