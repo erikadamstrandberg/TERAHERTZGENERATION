@@ -32,9 +32,7 @@ xi = np.arange(START,STOPP,diff)
 THz_power_I0_xi = np.zeros([len(I0),len(xi)])
 
 for P in range(len(I0)):
-    print(P)
     for Q in range(len(xi)):
-        print(Q)
         dim = [TIME,SIZE]
         plott = np.arange(TIME)
         plotz = np.arange(SIZE)
