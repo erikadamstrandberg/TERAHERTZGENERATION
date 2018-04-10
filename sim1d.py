@@ -31,7 +31,7 @@ def runsim(
         plottime = 0,
         fname = '',
         savesteps = 10,
-        t0real = 30e-15):
+        t0real = 60e-15):
     
 
     # Constants
@@ -72,11 +72,10 @@ def runsim(
     # tmax is the time when the pulse first reaches the edge
     # both expressed in terms of dt
     
-    time = int((tmax + tmin)/2)
     # Time is the arithmetic average of tmax and tmin defined above
     size = int(2/dz * (Sample3 + punit.splasma(pulsesize, omega_0)))
+    time = int((Sample3 + size/2 + pulselength)/2)
     # This size is slightly longer than the furthest sample point + the size of the pulse.
-    
     # size and time are now defined; we can start initialising the needed matrices.
     pulsestart = int(size/2) - pulselength
     dim = [int(time),int(size)]
