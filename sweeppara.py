@@ -18,12 +18,12 @@ SIZE = int(2500/dz)
 PULSELENGTH = int(1250/dz)
 PULSESTART = int(500/dz)
 
-diff = 0.02
+diff = 0.5
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
 
-diff = np.pi/20
+diff = np.pi/2
 START = 0
 STOPP = np.pi+diff
 phi = np.arange(START,STOPP,diff)
