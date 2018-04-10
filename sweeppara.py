@@ -101,3 +101,6 @@ for P in range(len(xi)):
         THz_cut_i = int(THz_cut[0][0])
         THz_power_xi_phi[P][Q] = sum(np.abs(Eft[0:THz_cut_i])**2)
         
+np.savetxt("THz_power_xi_phi_4e18",THz_power_xi_phi,delimiter=",") 
+np.savetxt("THz_power_xi_phi_4e18_xi",xi,delimiter=",")
+np.savetxt("THz_power_xi_phi_4e18_phi",phi,delimiter=",")
