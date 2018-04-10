@@ -17,6 +17,8 @@ TIME = int(1250/dt)
 SIZE = int(2500/dz)
 PULSELENGTH = int(1250/dz)
 PULSESTART = int(500/dz)
+PLASMASTART = PULSELENGTH+PULSESTART
+PLASMASTOPP = SIZE
 
 diff = 0.5
 START = 0
@@ -71,7 +73,6 @@ for P in range(len(xi)):
         Natpunit = punit.nplasma(NatREAL,OMEGA_0)
         Nat = np.ones(SIZE)*Natpunit
         
-        PLASMASTOPP = SIZE
         RAMP_DAMP = 2
         
         Rampfunctions.Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dz)
