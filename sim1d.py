@@ -102,7 +102,7 @@ def runsim(
     NatREAL = 3e25
     E0REAL = np.sqrt(2*I0/(EPSILON*LIGHTSPEED))
     plasmastart = int(size/2)    # where the electron density starts
-    plasmastopp = size                      # Where it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window
+    plasmastopp = plasmastart + int(punit.splasma(1e-5, omega_0)/dz)                      # Where it stops. Note: for PLASMASTOPP = SIZE the plasma extents all the way to the end of the simlation window
     E0 = punit.Eplasma(E0REAL,omega_0)
     t0 = punit.tplasma(t0real,omega_0)
 
