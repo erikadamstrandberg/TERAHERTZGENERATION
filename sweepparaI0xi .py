@@ -19,12 +19,12 @@ PULSELENGTH = int(1250/dz)
 PULSESTART = int(500/dz)
 PLASMASTART = PULSELENGTH + PULSESTART
 
-diff = 1e18
+diff = 1e20
 START = 1e18
 STOPP = 1e20+diff
 I0 = np.arange(START,STOPP,diff)
 
-diff = 0.02
+diff = 0.5
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
@@ -100,6 +100,6 @@ for P in range(len(I0)):
         THz_cut_i = int(THz_cut[0][0])
         THz_power_I0_xi[P][Q] = sum(np.abs(Eft[0:THz_cut_i])**2)
     
-np.savetxt("THz_power_I0_xi_0",THz_power_I0_xi,delimiter=",") 
-np.savetxt("THz_power_I0_xi_0_I0",I0,delimiter=",")
-np.savetxt("THz_power_I0_xi_0_xi",xi,delimiter=",")
+np.savetxt("THz_power_I0_xi_0_temp",THz_power_I0_xi,delimiter=",") 
+np.savetxt("THz_power_I0_xi_0_I0_temp",I0,delimiter=",")
+np.savetxt("THz_power_I0_xi_0_xi_temp",xi,delimiter=",")
