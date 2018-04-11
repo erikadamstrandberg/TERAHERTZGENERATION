@@ -30,7 +30,7 @@ def runsim(
         plasmastopp = deepcopy(size),
         plottime = 0,
         fname = '',
-        savesteps = 10,
+        savesteps = 100,
         t0real = 60e-15):
     
 
@@ -113,7 +113,8 @@ def runsim(
 
     # These lines plot the initial E-field and the atom density.
     #mplot.plot(E)
-    #mplot.plot(Nat)
+    mplot.plot(Nat)
+    mplot.savetxt(Nat)
     #mplot.axis([int(size/2) - pulselength, size, -0.015, 0.015])
 
     bar = ChargingBar('Simulation running', max = time)
@@ -180,7 +181,7 @@ def runsim(
     np.savetxt(filename + 'Efinal.csv', E)
     
     #print(netot[0])
-    if fname and savex and False:
+    if fname and savex:
         #plog('Saving E-field for all time and all space as ' + fname + '.')
         plotnsave(Etot, savetext = True, filename = fname + 'E')
         plotnsave(Btot, savetext = True, filename = fname + 'B')
