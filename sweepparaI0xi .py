@@ -19,12 +19,12 @@ PULSELENGTH = int(1250/dz)
 PULSESTART = int(500/dz)
 PLASMASTART = PULSELENGTH + PULSESTART
 
-diff = 1e20
+diff = 1e18
 START = 1e18
 STOPP = 1e20+diff
 I0 = np.arange(START,STOPP,diff)
 
-diff = 0.5
+diff = 0.05
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
@@ -32,7 +32,9 @@ xi = np.arange(START,STOPP,diff)
 THz_power_I0_xi = np.zeros([len(I0),len(xi)])
 
 for P in range(len(I0)):
+    print(P)
     for Q in range(len(xi)):
+        print(Q)
         dim = [TIME,SIZE]
         plott = np.arange(TIME)
         plotz = np.arange(SIZE)
