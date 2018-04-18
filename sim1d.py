@@ -73,8 +73,8 @@ def runsim(
     # both expressed in terms of dt
     
     # Time is the arithmetic average of tmax and tmin defined above
-    size = int(2/dz * (Sample3 + punit.splasma(pulsesize, omega_0)))
-    time = int((Sample3 + size/2 + pulselength)/2*1.5)
+    size = int(2/dz * (Sample3 + punit.splasma(pulsesize, omega_0))*2)
+    time = int((Sample3 + size/2 + pulselength)/2*3)
     # This size is slightly longer than the furthest sample point + the size of the pulse.
     # size and time are now defined; we can start initialising the needed matrices.
     pulsestart = int(size/2) - pulselength
@@ -106,15 +106,24 @@ def runsim(
     E0 = punit.Eplasma(E0REAL,omega_0)
     t0 = punit.tplasma(t0real,omega_0)
 
-    Laser.Gauss_forward(E,B,E0,pulselength,pulsestart,OMEGAPRIM,t0,dt,dz) # Sets up the laser pulse in the window
+    xi = 0.1
+    phi = np.pi/2
+    
+    Laser.TwoC_forward_bm(E,B,E0,xi,phi,pulselength,pulsestart,OMEGAPRIM,t0,dt,dz) # Sets up the laser pulse in the window
+
     Natpunit = punit.nplasma(NatREAL,omega_0)
     Nat = np.ones(size)*Natpunit
     Rampfunctions.Ramp_exp(plasmastart,plasmastopp,rampdamp,Natpunit,Nat,size,dt) # Creates a ramp for the electron density
-
+    #print(time)
+    #print(plasmastart + pulselength + Sample3/dz)
+    #mplot.plot(E)
+    #mplot.plot(Nat)
+    #mplot.savefig('Epresim.png')
+    #mplot.axvline(Sample3/dz + plasmastart, linestyle = '--')
     # These lines plot the initial E-field and the atom density.
     #mplot.plot(E)
-    mplot.plot(Nat)
-    mplot.savetxt(Nat)
+    #mplot.plot(Nat)
+    #mplot.savetxt(Nat)
     #mplot.axis([int(size/2) - pulselength, size, -0.015, 0.015])
 
     bar = ChargingBar('Simulation running', max = time)
@@ -190,3 +199,5 @@ def runsim(
 
 def plog(msg):
     print(str(datetime.now()) + ': ' + msg)
+
+runsim()
