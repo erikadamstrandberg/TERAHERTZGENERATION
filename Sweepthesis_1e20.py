@@ -29,8 +29,8 @@ for P in range(len(xi)):
     print(P)
     for Q in range(len(phi)):
         print(Q)
-        dt = 0.099
-        dz = 0.1
+        dt = 0.198
+        dz = 0.2
         
         c = const.speed_of_light
         epsilon = const.epsilon_0 
