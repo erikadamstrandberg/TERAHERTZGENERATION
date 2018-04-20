@@ -88,16 +88,23 @@ def main():
         for file in s3:
             plog(dir + file)
             data = np.genfromtxt(dir + file)
-            data = 2*dt*np.abs(np.fft.fft(data))**2
+            plog(str(np.max(data)))
             maxtime = len(data)
+            data = 2*dt*np.abs(np.fft.fft(data))**2
             #data = np.abs(data)**2
             #S3 = np.vstack([S3, data])
             freq_cut = int(flaser*maxtime*dt/omega_0)
             maxtimeplot = freq_cut*2
-            freks = np.arange(10)/10*80e11
-            mplot.plot(data[0:maxtimeplot])
+            #freks = np.arange(10)/10*80e11
+            freks = np.fft.fftfreq(maxtime)/dt*omega_0
+            #mplot.plot(freks,data[0:maxtimeplot])
+            mplot.plot(freks, data)
+            mplot.axis([0, 80e-12, 1e-12, 1e0])
+            mplot.yscale('log')
             mplot.savefig(file[:-3] + '.png')
         fig, ax = mplot.subplots()
+        mplot.savefig(file[:-3] + '.png')
+        return 0
         plog('Plotting S3.')
         # flaser*freq_cut/maxtime/dt*1e-13*100
         maxthz_i = int(40e12*maxtime*dt/omega_0)
