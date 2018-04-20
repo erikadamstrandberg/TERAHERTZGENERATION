@@ -64,8 +64,6 @@ for P in range(len(xi)):
         Ni1 = (np.zeros(SIZE),np.zeros(SIZE))
         Ni0 = (np.ones(SIZE),np.zeros(SIZE))
         ne = (np.zeros(SIZE),np.zeros(SIZE))
-        Etot = np.zeros(dim)
-        netot = np.zeros(dim)
         Z = np.arange(SIZE)*dz
         T = np.arange(TIME)*dt
         Etera = np.zeros(TIME)
