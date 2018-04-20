@@ -108,7 +108,7 @@ for P in range(len(xi)):
         for i in range(1,TIME):
             
             E = SpaceSolver.E(E,B,J,dt,dz)
-                        B = SpaceSolver.B(E,B,dt,dz)
+            B = SpaceSolver.B(E,B,dt,dz)
             ne = SpaceSolver.N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt)
             J = SpaceSolver.J(E,J,ne,nu,dt,dz)
             E[0] = 0
