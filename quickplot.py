@@ -4,19 +4,18 @@ import Plasmaunit as punit
 import numpy as np
 import scipy.constants as const
 import matplotlib.pyplot as mplot
+from matplotlib.colors import LogNorm
 from os import walk
 from plog import plog
 from progress.bar import ChargingBar
 
-def plotmatrix(matrix, fname, xmin, xmax, ymin, ymax):
-    extent = xmin, xmax, ymin, ymax
-    mplot.imshow(matrix, extent = extent, aspect = 'auto')
-    mplot.savefig(fname)
+mplot.rcParams['mathtext.fontset'] = 'cm'
+mplot.rcParams['font.size'] = 20
+
 
 def main():
     c = const.speed_of_light
-    k = 2
-    dir = 't0sweep/'
+    dir = 't0_comparisons/'
     fname = 'Sample1'
     name = dir + fname
     LAMBDA = 1e-6
@@ -26,13 +25,29 @@ def main():
     omega_0 = OMEGAREAL/OMEGAPRIM
     dz = 0.1
     dt = dz - 1e-2
+    flaser = omega_0/(2*np.pi)
+
+    def plothueg():
+        plog('plotting hueg')
+        mplot.clf()
+        E = np.genfromtxt('huegE.csv', delimiter=',')
+        E = E + 1e-20*np.ones(np.shape(E))
+        print(np.shape(E))
+        #mplot.axvline(len(E[0,:]/2 + int(punit.splasma(100e-6 ,omega_0)/dz)))
+        mplot.imshow(E, aspect='auto', norm=LogNorm(vmin=1e-8, vmax=1e-2))
+        for i in range(int(np.shape(E)[0]/2)):
+            break
+            mplot.plot(E[i, :])
+        #mplot.show()
+        mplot.savefig('huegE.png')
+        plog('done')
+    #plothueg()
     
-    while True: 
-        flaser = omega_0/(2*np.pi)
+    while False: 
 
         input = np.genfromtxt('t0sweep/s3/s3fft.csv')
         input = input[1::, ::]
-        maxtime = len(input[0])
+        #maxtime = len(input[0])
         freq_cut = int(3*flaser*maxtime*dt/omega_0)
         maxtimeplot = freq_cut
 
@@ -53,44 +68,75 @@ def main():
         #ax.set_xlabels(freks[0:maxtimeplot:int(maxtimeplot/10)])
         fig.savefig('t0sweep/s3/s3fft0.png')
         '''
+        maxes = np.where(np.array(maxes) < 1)
         break
-    maxes = np.where(np.array(maxes) < 1)
-    # Collect samples
-    path = 't0sweep/'
-    f = []
-    plog('Scanning.')
-    for (dirpath, dirnames, filenames) in walk(path):
-        f.extend(filenames)
-        break
-    plog('Sorting.')
-    Efin = [file for file in f if '_Efinal' in file]
-    s1 = [file for file in f if '_s1' in file]
-    s2 = [file for file in f if '_s2' in file]
-    s3 = [file for file in f if '_s3' in file]
-    maxtime = len(np.genfromtxt(dir + s3[0]))
-    plog('Sorted.')
-    S3 = np.zeros(maxtime)
-    for file in s3:
-        data = np.genfromtxt(dir + file)
-        data = np.abs(np.fft.fft(data))**2
-        S3 = np.vstack([S3, data])
-
-    freq_cut = int(flaser*maxtime*dt/omega_0)
-    maxtimeplot = freq_cut*2
-    freks = np.arange(10)/10*80e11
-    extent = 0, int(maxtimeplot), 1e-15, 10e-15
-
-    fig, ax = mplot.subplots()
-    #ax.set_xticks(np.arange(10)) Det här är så man gör
-    ax.set_xticks(len(S3[0, ::]))
-    #ax.set_xticks(ax.get_xticks/dt/maxtime)
-    #ax.set_xticklabels(['cancer'])
-    cax = ax.imshow(S3[::, :int(maxtimeplot):], extent=extent,
-                    aspect='auto',
-                    cmap='plasma')
-    fig.colorbar(cax, label=r'|E(\nu)|^2')
-    fig.savefig('t0sweep/s3/s3fft02.png')
-    plog('Done.')
+    def plotthzspectrum():
+        # Collect samples
+        f = []
+        plog('Scanning.')
+        for (dirpath, dirnames, filenames) in walk(dir):
+            f.extend(filenames)
+            break
+        plog('Sorting.')
+        Efin = [file for file in f if '_Efinal' in file]
+        s1 = [file for file in f if '_s1' in file]
+        s2 = [file for file in f if '_s2' in file]
+        s3 = [file for file in f if '_s3' in file]
+        plog('Sorted.')
+        maxtime = len(np.genfromtxt(dir + s3[0]))
+        S3 = np.array([])
+        for file in s3:
+            plog(dir + file)
+            data = np.genfromtxt(dir + file)
+            data = 2*dt*np.abs(np.fft.fft(data))**2
+            maxtime = len(data)
+            #data = np.abs(data)**2
+            #S3 = np.vstack([S3, data])
+            freq_cut = int(flaser*maxtime*dt/omega_0)
+            maxtimeplot = freq_cut*2
+            freks = np.arange(10)/10*80e11
+            mplot.plot(data[0:maxtimeplot])
+            mplot.savefig(file[:-3] + '.png')
+        fig, ax = mplot.subplots()
+        plog('Plotting S3.')
+        # flaser*freq_cut/maxtime/dt*1e-13*100
+        maxthz_i = int(40e12*maxtime*dt/omega_0)
+        #print(maxthz_i)
+        # 2*int(freq_cut) for laser
+        # maxthz_i för thz
+        ax.plot(S3[1, 0:maxthz_i])
+        mplot.yscale('log')
+        fig.savefig('t0comp.png')
+        if False:
+            THz = True
+            #THz = False
+            if THz:
+                extent = 0, 40, 1, 10
+                cax = ax.imshow(S3[::-1, :maxthz_i:], extent=extent,
+                                aspect='auto', cmap='plasma',
+                                norm=LogNorm(vmin=1e-8, vmax=1e-2))
+                cbar = mplot.colorbar(cax)
+                cbar.ax.set_ylabel(r'$|E(\nu)|^2\mathrm{[arb. u.]}$' )
+                mplot.title(r'$\mathrm{Cosine like\ pulse\ at\ }z = 100\mathrm{\mu m}$')
+                mplot.xticks([10, 20, 30, 40])
+                mplot.xlabel(r'$\nu\ [\mathrm{THz}]$')
+                mplot.ylabel(r'$t_0\ [\mathrm{fs}]$')
+                fig.savefig('t0sweep/s3/t0sweep_cospulse_thz_s3.pdf', format='pdf' ,bbox_inches="tight")
+                plog('Done.')
+            else:
+                extent = 0, 400, 1, 10
+                cax = ax.imshow(S3[::-1, :2*int(freq_cut):], extent=extent,
+                                aspect='auto', cmap='plasma',
+                                norm=LogNorm(vmin=1e-8, vmax=1e0))
+                cbar = mplot.colorbar(cax)
+                cbar.ax.set_ylabel(r'$|E(\nu)|^2\mathrm{[arb. u.]}$' )
+                mplot.title(r'$\mathrm{Cosine like\ pulse\ at\ }z = 100\mathrm{\mu m}$')
+                mplot.xticks([100, 200, 300, 400])
+                mplot.xlabel(r'$\nu\ [\mathrm{THz}]$')
+                mplot.ylabel(r'$t_0\ [\mathrm{fs}]$')
+                fig.savefig('t0sweep/s3/t0sweep_cospulse_laser_s3.pdf', format='pdf' ,bbox_inches="tight")
+                plog('Done.')
+    plotthzspectrum()
     return 0
 
     for file in s3:
@@ -285,3 +331,4 @@ def unpackdata(input, dir, length):
     
 if __name__ == '__main__':
     main()
+
