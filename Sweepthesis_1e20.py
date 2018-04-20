@@ -12,7 +12,7 @@ import matplotlib.ticker as ticker
 mplot.rcParams['mathtext.fontset'] = 'cm'
 
 
-diff = 0.01
+diff = 0.02
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
