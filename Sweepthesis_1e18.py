@@ -12,7 +12,7 @@ import matplotlib.ticker as ticker
 mplot.rcParams['mathtext.fontset'] = 'cm'
 
 
-diff = 0.01
+diff = 0.02
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
@@ -40,7 +40,7 @@ for P in range(len(xi)):
         OMEGAPRIM = 1                       
         OMEGA_0 = OMEGAREAL/OMEGAPRIM
         t0REAL = 5e-15
-        I0 = 1e20
+        I0 = 1e18
         E0REAL = np.sqrt(2*I0/(epsilon*c))
         NatREAL = 2.7e25
         nuREAL = 100e-15
@@ -127,7 +127,7 @@ for P in range(len(xi)):
         Eft = np.fft.fft(Etera)*dt*2
         THz_power_xi_phi[P][Q] = sum(np.abs(Eft[0:THz_cut_i])**2)
 
-np.savetxt("Thesis/THz_power_xi_phi_1e20",THz_power_xi_phi,delimiter=",") 
-np.savetxt("Thesis/THz_power_xi_phi_1e20_xi",xi,delimiter=",")
-np.savetxt("Thesis/THz_power_xi_phi_1e20_phi",phi,delimiter=",")
-np.savetxt("Thesis/Laser_input_xi_phi_1e20",Laser_input_xi_phi,delimiter=",")
+np.savetxt("Thesis/THz_power_xi_phi_1e18",THz_power_xi_phi,delimiter=",") 
+np.savetxt("Thesis/THz_power_xi_phi_1e18_xi",xi,delimiter=",")
+np.savetxt("Thesis/THz_power_xi_phi_1e18_phi",phi,delimiter=",")
+np.savetxt("Thesis/Laser_input_xi_phi_1e18",Laser_input_xi_phi,delimiter=",")
