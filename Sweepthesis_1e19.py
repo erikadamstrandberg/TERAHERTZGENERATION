@@ -11,12 +11,12 @@ import Ionization as Ion
 import matplotlib.ticker as ticker
 mplot.rcParams['mathtext.fontset'] = 'cm'
 
-diff = 0.02
+diff = 0.05
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
 
-diff = np.pi/40
+diff = np.pi/20
 START = 0
 STOPP = np.pi+diff
 phi = np.arange(START,STOPP,diff)
