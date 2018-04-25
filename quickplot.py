@@ -15,7 +15,7 @@ mplot.rcParams['font.size'] = 20
 
 def main():
     c = const.speed_of_light
-    dir = 't0_comparisons/'
+    dir = 't0sweep/'
     fname = 'Sample1'
     name = dir + fname
     LAMBDA = 1e-6
@@ -26,6 +26,30 @@ def main():
     dz = 0.1
     dt = dz - 1e-2
     flaser = omega_0/(2*np.pi)
+
+    def plotspectrum():
+        i = 100
+        spectrum = np.loadtxt('Per'+str(i)+'micro_spectrum.csv', dtype='complex', converters={0: lambda s:complex(s.decode().replace('+-', '-'))})
+        freks = np.genfromtxt('Per'+str(i)+'micro_frek.csv')
+        ne = np.genfromtxt('Per'+str(i)+'micro_ne_thz30.csv')
+        spectrum = np.abs(spectrum)
+        maxtime = int(len(freks)/2)
+        laser_i = np.where(freks == ne[0])
+        thz_i = np.where(freks == ne[1])
+        freks = freks*1e-12
+        ne = ne*1e-12
+
+        mplot.axvline(ne[0], linestyle='--', c = 'r')
+        #mplot.axis([0, ne[1], 0, 1.5*np.max(spectrum[:int(thz_i[0])])])
+        mplot.axis([0, ne[1]*3, 1e-6,1e-4 ])
+        mplot.xlabel(r'$\mathrm{\nu\ [Thz]}$')
+        mplot.ylabel(r'$\mathrm{|E|\ [arb.\ u.]}$')
+        mplot.yscale('log')
+        mplot.title(r'$\mathrm{z = '+str(i)+'\cdot 10^{-6}\ meter}$')
+        mplot.plot(freks[:maxtime], spectrum[:maxtime])
+
+        mplot.savefig('Per'+str(i)+'micro.pdf', format='pdf', bbox_inches='tight')
+    plotspectrum()
 
     def plothueg():
         plog('plotting hueg')
@@ -83,65 +107,63 @@ def main():
         s2 = [file for file in f if '_s2' in file]
         s3 = [file for file in f if '_s3' in file]
         plog('Sorted.')
-        maxtime = len(np.genfromtxt(dir + s3[0]))
-        S3 = np.array([])
+        maxtime = len(np.genfromtxt(dir + s3[1]))
+        S3 = np.zeros(maxtime)
         for file in s3:
             plog(dir + file)
             data = np.genfromtxt(dir + file)
-            plog(str(np.max(data)))
             maxtime = len(data)
             data = 2*dt*np.abs(np.fft.fft(data))**2
             #data = np.abs(data)**2
-            #S3 = np.vstack([S3, data])
-            freq_cut = int(flaser*maxtime*dt/omega_0)
-            maxtimeplot = freq_cut*2
-            #freks = np.arange(10)/10*80e11
-            freks = np.fft.fftfreq(maxtime)/dt*omega_0
-            #mplot.plot(freks,data[0:maxtimeplot])
-            mplot.plot(freks, data)
-            mplot.axis([0, 80e-12, 1e-12, 1e0])
-            mplot.yscale('log')
-            mplot.savefig(file[:-3] + '.png')
+            print(np.max(data))
+            S3 = np.vstack([S3, data])
+            if True:
+                freq_cut = int(flaser*maxtime*dt/omega_0)
+                maxtimeplot = freq_cut*2
+                #freks = np.arange(10)/10*80e11
+                freks = np.fft.fftfreq(maxtime)/dt*omega_0
+                #mplot.plot(freks,data[0:maxtimeplot])
+                mplot.plot(freks, data)
+                mplot.axis([0, 80e-12, 1e-12, 1e0])
+                mplot.yscale('log')
+                mplot.savefig(file[:-3] + '.png')
         fig, ax = mplot.subplots()
-        mplot.savefig(file[:-3] + '.png')
-        return 0
+        #mplot.savefig(file[:-3] + '.png')
         plog('Plotting S3.')
         # flaser*freq_cut/maxtime/dt*1e-13*100
         maxthz_i = int(40e12*maxtime*dt/omega_0)
         #print(maxthz_i)
         # 2*int(freq_cut) for laser
         # maxthz_i för thz
-        ax.plot(S3[1, 0:maxthz_i])
-        mplot.yscale('log')
-        fig.savefig('t0comp.png')
-        if False:
+        S3 = S3[1::, ::]
+        if True:
             THz = True
             #THz = False
             if THz:
-                extent = 0, 40, 1, 10
+                extent = 0, 40, 1, 2.5
                 cax = ax.imshow(S3[::-1, :maxthz_i:], extent=extent,
                                 aspect='auto', cmap='plasma',
                                 norm=LogNorm(vmin=1e-8, vmax=1e-2))
                 cbar = mplot.colorbar(cax)
                 cbar.ax.set_ylabel(r'$|E(\nu)|^2\mathrm{[arb. u.]}$' )
-                mplot.title(r'$\mathrm{Cosine like\ pulse\ at\ }z = 100\mathrm{\mu m}$')
+                mplot.title(r'$\mathrm{Sine like\ pulse\ at\ }z = 100\mathrm{\mu m}$')
                 mplot.xticks([10, 20, 30, 40])
                 mplot.xlabel(r'$\nu\ [\mathrm{THz}]$')
                 mplot.ylabel(r'$t_0\ [\mathrm{fs}]$')
-                fig.savefig('t0sweep/s3/t0sweep_cospulse_thz_s3.pdf', format='pdf' ,bbox_inches="tight")
+                fig.savefig(dir +'s3thz.pdf', format='pdf' ,bbox_inches="tight")
                 plog('Done.')
             else:
-                extent = 0, 400, 1, 10
-                cax = ax.imshow(S3[::-1, :2*int(freq_cut):], extent=extent,
+                extent = 0, 400, 1, 2.5
+                cax = ax.imshow(S3[::-1, :int(2*flaser*maxtime*dt/omega_0):], extent=extent,
                                 aspect='auto', cmap='plasma',
                                 norm=LogNorm(vmin=1e-8, vmax=1e0))
                 cbar = mplot.colorbar(cax)
                 cbar.ax.set_ylabel(r'$|E(\nu)|^2\mathrm{[arb. u.]}$' )
-                mplot.title(r'$\mathrm{Cosine like\ pulse\ at\ }z = 100\mathrm{\mu m}$')
+                mplot.title(r'$\mathrm{Sine like\ pulse\ at\ }z = 100\mathrm{\mu m}$')
                 mplot.xticks([100, 200, 300, 400])
                 mplot.xlabel(r'$\nu\ [\mathrm{THz}]$')
                 mplot.ylabel(r'$t_0\ [\mathrm{fs}]$')
-                fig.savefig('t0sweep/s3/t0sweep_cospulse_laser_s3.pdf', format='pdf' ,bbox_inches="tight")
+                fig.savefig(dir +'laser.pdf', format='pdf' ,bbox_inches="tight")
                 plog('Done.')
     plotthzspectrum()
     return 0
@@ -269,7 +291,6 @@ def main():
             mplot.ylabel('|E|')
             mplot.xlabel('Length (dz)')
             #mplot.axis([10000, 30000, 1e-11, 1e5])
-            
             #mplot.axvline(zreal[int(len(stuff)/2 + z3/dz)])
             mplot.savefig(dir + 'efinal/' + efin[:len(efin)-3] + 'png')
             
@@ -281,7 +302,7 @@ def main():
     times = np.fft.fftfreq(maxtime)/dt*omega_0
     maxtimes = sum([1 for x in times if x<80e11])
 
-    #print(np.shape(t0values))
+    #print(np.shape(values))
     #print(np.shape(times))
 
     mplot.contourf(times[:len(times)/2 + maxtimes], t0values, intensity1[:, :maxtimes])
