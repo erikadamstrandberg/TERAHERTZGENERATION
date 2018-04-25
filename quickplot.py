@@ -49,7 +49,7 @@ def main():
         mplot.plot(freks[:maxtime], spectrum[:maxtime])
 
         mplot.savefig('Per'+str(i)+'micro.pdf', format='pdf', bbox_inches='tight')
-    plotspectrum()
+    #plotspectrum()
 
     def plothueg():
         plog('plotting hueg')
