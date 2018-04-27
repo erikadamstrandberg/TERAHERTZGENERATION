@@ -22,7 +22,7 @@ def J(E,J,ne,nu,dt,dz):
     ne[1][:] = ne[0][:]
     return J
 
-def N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt):
+def N(E,Nat,Ni0,Ni1,Ni2,Ni3,ne,W1,W2,W3,OMEGA_0,dt):
     
     # Calculates all the needed ionization propabilites.
     W1 = Ion.Landau_array_roll(E,OMEGA_0,1)
@@ -34,7 +34,8 @@ def N(E,Nat,Ni0,Ni1,Ni2,ne,W1,W2,W3,OMEGA_0,dt):
     
     # Update eq. for the ionization density.
     Ni1[0][:] = (Ni1[0][:]*(1-(dt/2)*W2)+(dt/2)*W1*(Ni0[0][:]+Ni0[1][:]))/(1+(dt/2)*W2)
-    Ni2[0][:] = (Ni2[0][:]*(1-(dt/2)*W3)+(dt/2)*W2*(Ni1[0][:]+Ni1[1][:]))/(1+(dt/2)*W3)
+    Ni2[0][:] = (Ni2[0][:]+(dt/2)*W2*(Ni1[0][:]+Ni1[1][:]))
+    
     
     # Updates the new electron density.
     ne[0][:] = 1*Ni1[0][:] + 2*Ni2[0][:]
