@@ -31,7 +31,7 @@ START = 0
 STOPP = np.pi
 phi = np.arange(START,STOPP,diff)
 
-dim = [len(xi),len(phi)]
+dim = [int(len(xi)),int(len(phi))]
 THz_power = np.zeros(dim)
 Laser_input = np.zeros(dim)
 ne_nat = np.zeros(dim)
