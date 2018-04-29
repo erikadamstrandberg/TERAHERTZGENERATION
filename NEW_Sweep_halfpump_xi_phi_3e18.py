@@ -151,7 +151,7 @@ for P in range(len(xi)):
         Total_Nat = sum(Nat)
         
         SAVE_EVERY_T = 10000
-        SAVE_dim = TIME/SAVE_EVERY_T
+        SAVE_dim = int(TIME/SAVE_EVERY_T)
         dim = [SAVE_dim,SIZE]
         Etot = np.zeros(dim)
         netot = np.zeros(dim)
