@@ -62,7 +62,7 @@ def N4(E,Nat,Ni0,Ni1,Ni2,Ni3,Ni4,Ni5,Ni6,ne,W1,W2,W3,W4,W5,W6,OMEGA_0,dt):
     Ni2[0][:] = (Ni2[0][:]*(1-(dt/2)*W3)+(dt/2)*W2*(Ni1[0][:]+Ni1[1][:]))/(1+(dt/2)*W3)
     Ni3[0][:] = (Ni3[0][:]*(1-(dt/2)*W4)+(dt/2)*W3*(Ni2[0][:]+Ni2[1][:]))/(1+(dt/2)*W4)
     Ni4[0][:] = (Ni4[0][:]*(1-(dt/2)*W5)+(dt/2)*W4*(Ni3[0][:]+Ni3[1][:]))/(1+(dt/2)*W5)
-    Ni5[0][:] = (Ni5[0][:]*(1-(dt/2)*W6)+(dt/2)*W4*(Ni4[0][:]+Ni4[1][:]))/(1+(dt/2)*W6)
+    Ni5[0][:] = (Ni5[0][:]*(1-(dt/2)*W6)+(dt/2)*W5*(Ni4[0][:]+Ni4[1][:]))/(1+(dt/2)*W6)
     Ni6[0][:] = (Ni6[0][:]+(dt/2)*W6*(Ni5[0][:]+Ni5[1][:]))
     
     # Updates the new electron density.
@@ -75,7 +75,7 @@ def N4(E,Nat,Ni0,Ni1,Ni2,Ni3,Ni4,Ni5,Ni6,ne,W1,W2,W3,W4,W5,W6,OMEGA_0,dt):
     Ni3[1][:] = Ni3[0][:]
     Ni4[1][:] = Ni4[0][:]
     Ni5[1][:] = Ni5[0][:]
-    
+    Ni6[1][:] = Ni6[0][:]
     return ne
 
 def N_1e20(E,Nat,Ni0,Ni1,Ni2,Ni3,Ni4,Ni5,Ni6,Ni7,Ni8,ne,W1,W2,W3,W4,W5,W6,W7,W8,OMEGA_0,dt):
