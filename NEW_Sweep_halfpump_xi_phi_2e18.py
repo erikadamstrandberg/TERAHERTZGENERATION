@@ -28,7 +28,7 @@ xi = np.arange(START,STOPP,diff)
 
 diff = np.pi/8
 START = 0
-STOPP = np.pi
+STOPP = np.pi+diff
 phi = np.arange(START,STOPP,diff)
 
 dim = [int(len(xi)),int(len(phi))]
