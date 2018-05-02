@@ -96,7 +96,7 @@ for P in range(len(xi)):
         OMEGAREAL = 2*np.pi*f
         OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
         OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
-        t0REAL = 15e-15
+        t0REAL = 5e-15
         NatREAL = 3e25
         I0 = 1e19
         E0REAL = np.sqrt(2*I0/(epsilon*c))
