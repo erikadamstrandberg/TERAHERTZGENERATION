@@ -12,8 +12,8 @@ import Rampfunctions
 import Ionization as Ion
 import matplotlib.ticker as ticker
 
-dt = 0.0495
-dz = 0.05
+dt = 0.099
+dz = 0.1
 nu = 0
 
 TIME = int(5500/dt)
