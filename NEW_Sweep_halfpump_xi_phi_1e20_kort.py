@@ -159,6 +159,8 @@ for P in range(len(xi)):
         SAVE_EVERY_count = 0
         
         for i in range(1,TIME):
+            if (i%10000==0):
+                print(i)
             E = SpaceSolver.E(E,B,J,dt,dz)
             B = SpaceSolver.B(E,B,dt,dz)
             ne = SpaceSolver.N_1e20(E,Nat,Ni0,Ni1,Ni2,Ni3,Ni4,Ni5,Ni6,Ni7,Ni8,ne,W1,W2,W3,W4,W5,W6,W7,W8,OMEGA_0,dt)
