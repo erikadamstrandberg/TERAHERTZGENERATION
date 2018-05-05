@@ -11,7 +11,6 @@ import Plasmaunit as punit
 import Rampfunctions
 import Ionization as Ion
 import matplotlib.ticker as ticker
-import Micro_i as Mic
 
 dt = 0.0495#495 
 dz = 0.05#5
