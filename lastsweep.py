@@ -131,9 +131,6 @@ for P in range(len(I0)):
     
     Total_Nat = sum(Nat)
     
-    mplot.plot(Z,E)
-    mplot.plot(Z,Nat)
-    
     SAVE_EVERY_T = 10000
     SAVE_dim = int(TIME/SAVE_EVERY_T)
     dim = [SAVE_dim,SIZE]
