@@ -27,9 +27,9 @@ start = 1e18
 stopp = 1e20+diff
 I0 = np.arange(start,stopp,diff)
 
-Laser_input = np.array(len(I0))
-ne_nat = np.array(len(I0))
-THz_power = np.array(len(I0))
+Laser_input = np.zeros(len(I0))
+ne_nat = np.zeros(len(I0))
+THz_power = np.zeros(len(I0))
 
 for P in range(len(I0)):
     dim = [TIME,SIZE]
