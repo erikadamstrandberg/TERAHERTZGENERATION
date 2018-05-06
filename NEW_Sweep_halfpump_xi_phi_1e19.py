@@ -96,7 +96,7 @@ for P in range(len(xi)):
         OMEGAREAL = 2*np.pi*f
         OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
         OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
-        t0REAL = 15e-15
+        t0REAL = 5e-15
         NatREAL = 3e25
         I0 = 1e19
         E0REAL = np.sqrt(2*I0/(epsilon*c))
@@ -159,8 +159,6 @@ for P in range(len(xi)):
         SAVE_EVERY_count = 0
         
         for i in range(1,TIME):
-            if (i%1000) == 0:
-                print(i)
             E = SpaceSolver.E(E,B,J,dt,dz)
             B = SpaceSolver.B(E,B,dt,dz)
             ne = SpaceSolver.N_1e20(E,Nat,Ni0,Ni1,Ni2,Ni3,Ni4,Ni5,Ni6,Ni7,Ni8,ne,W1,W2,W3,W4,W5,W6,W7,W8,OMEGA_0,dt)
