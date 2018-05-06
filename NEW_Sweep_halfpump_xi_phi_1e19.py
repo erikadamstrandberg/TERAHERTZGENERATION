@@ -184,8 +184,8 @@ for P in range(len(xi)):
         Total_ne = sum(ne[0])
         ne_nat[P][Q] = Total_ne/Total_Nat
 
-np.savetxt("THz_power_xi_phi_1e19",THz_power,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e19_laser",Laser_input,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e19_ion",ne_nat,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e19_xi",xi,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e19_phi",phi,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e19_5fs",THz_power,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e19_5fs_laser",Laser_input,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e19_5fs_ion",ne_nat,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e19_5fs_xi",xi,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e19_5fs_phi",phi,delimiter=',')
