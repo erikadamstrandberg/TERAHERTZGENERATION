@@ -12,9 +12,8 @@ import Rampfunctions
 import Ionization as Ion
 import matplotlib.ticker as ticker
 
-dt = 0.0396
-dz = 0.04
-nu = 0
+dt = 0.099#495 
+dz = 0.1#5
 
 TIME = int(5500/dt)
 SIZE = int(8000/dz)
