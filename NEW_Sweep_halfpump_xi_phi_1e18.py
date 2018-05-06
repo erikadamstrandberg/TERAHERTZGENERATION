@@ -96,7 +96,7 @@ for P in range(len(xi)):
         OMEGAREAL = 2*np.pi*f
         OMEGAPRIM = 1                       # this is the plasma omega, use this everywhere in the code
         OMEGA_0 = OMEGAREAL/OMEGAPRIM       # this is the arbitrary omega, use this as argument in punits
-        t0REAL = 15e-15
+        t0REAL = 5e-15
         NatREAL = 3e25
         I0 = 1e18
         E0REAL = np.sqrt(2*I0/(epsilon*c))
@@ -184,8 +184,8 @@ for P in range(len(xi)):
         Total_ne = sum(ne[0])
         ne_nat[P][Q] = Total_ne/Total_Nat
 
-np.savetxt("THz_power_xi_phi_1e18",THz_power,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e18_laser",Laser_input,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e18_ion",ne_nat,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e18_xi",xi,delimiter=',')
-np.savetxt("THz_power_xi_phi_1e18_phi",phi,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e18_5fs",THz_power,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e18_5fs_laser",Laser_input,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e18_5fs_ion",ne_nat,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e18_5fs_xi",xi,delimiter=',')
+np.savetxt("THz_power_xi_phi_1e18_5fs_phi",phi,delimiter=',')
