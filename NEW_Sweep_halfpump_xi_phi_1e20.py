@@ -12,20 +12,20 @@ import Rampfunctions
 import Ionization as Ion
 import matplotlib.ticker as ticker
 
-dt = 0.099#495 
-dz = 0.1#5
+dt = 0.0495#495 
+dz = 0.05#5
 
 TIME = int(5500/dt)
 SIZE = int(8000/dz)
 PULSELENGTH = int(1250/dz)
 PULSESTART = int(2000/dz)
 
-diff =  1/12
+diff =  1/8
 START = 0
 STOPP = 1+diff
 xi = np.arange(START,STOPP,diff)
 
-diff = np.pi/12
+diff = np.pi/8
 START = 0
 STOPP = np.pi
 phi = np.arange(START,STOPP,diff)
