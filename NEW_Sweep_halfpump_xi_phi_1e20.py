@@ -15,10 +15,10 @@ import matplotlib.ticker as ticker
 dt = 0.0495#495 
 dz = 0.05#5
 
-TIME = int(5500/dt)
-SIZE = int(8000/dz)
+TIME = int(3000/dt)
+SIZE = int(4000/dz)
 PULSELENGTH = int(1250/dz)
-PULSESTART = int(2000/dz)
+PULSESTART = int(1000/dz)
 
 diff =  1/8
 START = 0
