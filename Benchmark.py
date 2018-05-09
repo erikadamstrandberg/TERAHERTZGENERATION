@@ -9,8 +9,8 @@ import SpaceSolver
 import Plasmaunit as punit
 import Rampfunctions
 
-dt = 0.0199#099
-dz = 0.02#1
+dt = 0.0495#099
+dz = 0.05#1
 nu = 0
 
 TIME = int(25000/dt)
