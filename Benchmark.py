@@ -127,7 +127,6 @@ for i in range(1,TIME):
 
 ne_e = ne[0][collect_i]
 
-mplot.axis([0,TIME*dt,-1e-4,1e-4])
 #Start = 0
 #Stopp = 3000/dt
 #mplot.plot(T[Start:Stopp],Etera_three[Start:Stopp])
