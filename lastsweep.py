@@ -115,7 +115,7 @@ for P in range(len(I0)):
     Nat = np.ones(SIZE)*Natpunit
     
     PLASMASTART = PULSELENGTH+PULSESTART
-    PLASMASTOPP = PLASMASTART+Mic.Micro_i(3e-6,Z,OMEGA_0)
+    PLASMASTOPP = PLASMASTART+Mic.Micro_i(5e-6,Z,OMEGA_0)
     RAMP_DAMP = 2
     
     Rampfunctions.Ramp_exp(PLASMASTART,PLASMASTOPP,RAMP_DAMP,Natpunit,Nat,SIZE,dz)
@@ -167,7 +167,7 @@ for P in range(len(I0)):
     ne_nat[P] = Total_ne/Total_Nat
     ne_max = np.amax(ne[0])#ne[0][collect_i]
     
-np.savetxt("THz_power_1e18_1e20",THz_power,delimiter=',')
-np.savetxt("I0_1e18_1e20",I0,delimiter=',')
-np.savetxt("Laser_input_1e18_1e20",Laser_input,delimiter=',')
-np.savetxt("ne_nat__1e18_1e20",ne_nat,delimiter=',')
+np.savetxt("THz_power_1e18_1e20_5",THz_power,delimiter=',')
+np.savetxt("I0_1e18_1e20_5",I0,delimiter=',')
+np.savetxt("Laser_input_1e18_1e20_5",Laser_input,delimiter=',')
+np.savetxt("ne_nat__1e18_1e20_5",ne_nat,delimiter=',')
