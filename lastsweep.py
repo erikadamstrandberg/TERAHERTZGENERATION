@@ -17,8 +17,8 @@ dt = 0.0495#495
 dz = 0.05#5
 nu = 0
 
-TIME = int(3000/dt)
-SIZE = int(4000/dz)
+TIME = int(4000/dt)
+SIZE = int(5000/dz)
 PULSELENGTH = int(1250/dz)
 PULSESTART = int(1000/dz)
 
