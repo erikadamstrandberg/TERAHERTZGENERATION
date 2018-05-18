@@ -1,3 +1,5 @@
+""" Calculates the index i a spatial grid for a real length.                                          """
+
 import numpy as np
 import Plasmaunit as punit
 
